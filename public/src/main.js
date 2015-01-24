@@ -11,12 +11,16 @@ var socket = realtime({
   },
 
   onGameStart: function(data) {
+    console.log("onGameStart", data)
   },
 
   onGameEnd: function(data) {
+    console.log("onGameEnd", data)
   },
 
   onBlockAdded: function(data) {
+    console.log("onBlockAdded", data);
+    createBox(data);
   }
 });
 
@@ -55,29 +59,13 @@ function create() {
   game.physics.arcade.gravity.y = 250;
 
   graphics = game.add.graphics(0, 0);
-  game.input.onDown.add(createBox, this);
-}
+  game.input.onDown.add(function() {
+    socket.emit('add_block', {
+      x: game.input.x,
+      y: game.input.y
+    });
+  }, this);
 
-function createBox() {
-  var posx = game.input.x;
-  var posy = game.input.y;
-  //var box = new Phaser.Rectangle(posx, posy, gridSizePx, gridSizePx);
-  var box = game.add.sprite(posx, posy, 'box');
-  box.width = gridSizePx;
-  box.height = gridSizePx;
-  game.physics.enable(box, Phaser.Physics.ARCADE);
-  box.body.collideWorldBounds = true;
-  box.body.allowGravity = true;
-  box.body.bounce.y = 0.1;
-  allBoxes.push(box);
-  console.log("createBox");
-}
-
-function update () {
-
-}
-
-function render() {
   graphics.lineStyle(2, 0xFFFFFF);
   for (var i = 0; i <= gridWidth; i++) {
     graphics.moveTo(i*gridSizePx, 0);
@@ -87,4 +75,26 @@ function render() {
     graphics.moveTo(0, j*gridSizePx);
     graphics.lineTo(gridSizePx*gridWidth, j*gridSizePx);
   }
+}
+
+function createBox(data) {
+  console.log("createBox");
+  var posx = data.x;
+  var posy = data.y;
+  //var box = new Phaser.Rectangle(posx, posy, gridSizePx, gridSizePx);
+  var box = game.add.sprite(posx, posy, 'box');
+  box.width = gridSizePx;
+  box.height = gridSizePx;
+  game.physics.enable(box, Phaser.Physics.ARCADE);
+  box.body.collideWorldBounds = true;
+  box.body.allowGravity = true;
+  box.body.bounce.y = 0.1;
+  allBoxes.push(box);
+}
+
+function update () {
+
+}
+
+function render() {
 }
