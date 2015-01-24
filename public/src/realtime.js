@@ -32,5 +32,12 @@ module.exports = function(options) {
     }
   });
 
+  // call block_removed callback
+  socket.on('block_removed', function(data) {
+    if (options.onBlockRemoved) {
+      options.onBlockRemoved(data);
+    }
+  });
+
   return socket;
 };

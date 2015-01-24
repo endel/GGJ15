@@ -1,8 +1,8 @@
 var realtime = require('../realtime');
-var blockCreator = require('../entities/block_creator')
-var blockDestroyer = require('../entities/block_destroyer')
-
-var GoodGuy = require('../entities/good_guy.js');
+var BlockCreator = require('../entities/block_creator')
+var BlockDestroyer = require('../entities/block_destroyer')
+var GoodGuy = require('../entities/good_guy')
+//console.log("Realtime: ", realtime);
 
 module.exports = class Game {
 
@@ -14,7 +14,10 @@ module.exports = class Game {
     this.allEntities = [];
     this.graphics = null;
 
-    this.tools = [ blockCreator, blockDestroyer ];
+    this.blockCreator = new BlockCreator(this);
+    this.blockDestroyer = new BlockDestroyer(this);
+    this.tools = [this.blockCreator, this.blockDestroyer];
+
     this.toolLine = [];
     this.toolLineMax = 3;
 
@@ -43,7 +46,13 @@ module.exports = class Game {
 
       onBlockAdded: function(data) {
         console.log("onBlockAdded", data);
-        that.createBox(data);
+        //that.createBox(data);
+        that.blockCreator.createBlock(data);
+      },
+
+      onBlockRemoved: function(data) {
+        console.log("onBlockRemoved", data);
+        that.blockDestroyer.destroyBlock(data);
       }
     });
   }
@@ -61,11 +70,21 @@ module.exports = class Game {
     this.load.image('box', 'assets/images/elementos_01.png');
 
     this.graphics = this.add.graphics(0, 0);
+    //*******************
+    //*** CLICK EVENT ***
+    //*******************
     this.input.onDown.add(function() {
-      socket.emit('add_block', {
-        x: this.input.x,
-        y: this.input.y
-      });
+      var tool = this.toolLine[0];
+      var row = Math.floor(this.input.x / GRID_SIZE_PX);
+      var col = Math.floor(this.input.y / GRID_SIZE_PX);
+      if(tool.isValid(row, col)) {
+        socket.emit(tool.MESSAGE, {
+          x: row,
+          y: col
+        });
+      }
+      this.toolLine.shift();
+      this.toolLine.push(this.tools[Math.floor(Math.random()*2)]);
     }, this);
 
     for (var i = 0; i < this.toolLineMax; i++) {
@@ -81,22 +100,6 @@ module.exports = class Game {
       this.graphics.moveTo(0, j*GRID_SIZE_PX);
       this.graphics.lineTo(GRID_SIZE_PX*GRID_WIDTH, j*GRID_SIZE_PX);
     }
-  }
-
-  createBox(data) {
-    var col = Math.floor(data.x / GRID_SIZE_PX);
-    var row = Math.floor(data.y / GRID_SIZE_PX);
-    var posx = col * GRID_SIZE_PX;
-    var posy = row * GRID_SIZE_PX;
-    var box = this.add.sprite(posx, posy, 'box');
-    box.width = GRID_SIZE_PX;
-    box.height = GRID_SIZE_PX;
-    this.gridState[row][col] = box;
-    box.col = col;
-    box.row = row;
-    box.accel = 0;
-    this.allBoxes.push(box);
-    console.log("createBox");
   }
 
   createGoodGuy(data) {
@@ -147,7 +150,7 @@ module.exports = class Game {
     for (var i = 0; i < this.toolLine.length; i++) {
        line.push(this.toolLine[i].MESSAGE);
     }
-    game.debug.text("Tools:" + line.toString(), 0, 50, 0xFF0000);
+    game.debug.text("Tools:" + line.toString(), 0, 55, 'rgb(255,255,0)');
   }
 
 }
