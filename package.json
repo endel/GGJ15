@@ -22,7 +22,7 @@
     "build": "browserify public/src/main.js -t 6to5ify -o public/build/build.js",
     "watch": "watchify public/src/main.js -t 6to5ify -o public/build/build.js & npm run server",
     "watch-win": "watchify public/src/main.js -t 6to5ify -o public/build/build.js | npm run server",
-    "start": "node server.js"
+    "start": "npm run build && node server.js"
   },
   "repository": {
     "type": "git",
