@@ -1,5 +1,15 @@
 var realtime = require('./realtime'),
-    currentLevel = window.localStorage.getItem('level') || 1;
+    currentLevel = window.localStorage.getItem('level') || 1,
+
+    // game states
+    Boot = require('./states/boot'),
+    EndGame = require('./states/end_game'),
+    Game = require('./states/game'),
+    MainMenu = require('./states/main_menu'),
+    Preloader = require('./states/preloader'),
+
+    // game elements
+    GoodGuy = require('./entities/good_guy.js');
 
 var socket = realtime({
   level: currentLevel,
@@ -24,12 +34,19 @@ var socket = realtime({
   }
 });
 
-var game = new Phaser.Game(800, 600, Phaser.WEBGL, 'phaser-example', {
-  preload: preload,
-  create: create,
-  update: update,
-  render: render
-});
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'ggj');
+
+// Add the States your game has.
+// You don't have to do this in the html, it could be done in your Boot state too, but for simplicity I'll keep it here.
+game.state.add('Boot', Boot);
+game.state.add('Preloader', Preloader);
+game.state.add('MainMenu', MainMenu);
+game.state.add('Game', Game);
+
+// Now start the Boot state.
+game.state.start('Boot');
+
+/*
 
 
 var gridWidth = 16;
@@ -50,10 +67,6 @@ function preload() {
 }
 
 function create() {
-
-  //  This creates a simple sprite that is using our loaded image and
-  //  displays it on-screen
-  //game.add.sprite(0, 0, 'kitten');
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.gravity.y = 250;
@@ -93,8 +106,8 @@ function createBox(data) {
 }
 
 function update () {
-
 }
 
 function render() {
 }
+*/
