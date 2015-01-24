@@ -16,6 +16,8 @@ module.exports = function(options) {
       options.onGameStart(data);
     }
   });
+  // force game_start for level 0 players
+  if (options.level == 0) options.onGameStart();
 
   socket.on('game_end', function(data) {
     if (options.onGameEnd) {
