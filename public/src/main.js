@@ -1,4 +1,24 @@
-var realtime = require('./realtime');
+var realtime = require('./realtime'),
+    currentLevel = window.localStorage.getItem('level') || 1;
+
+var socket = realtime({
+  level: currentLevel,
+
+  onConnect: function(data) {
+    console.log(socket);
+    window.socket = socket;
+    // socket.emit('game_end');
+  },
+
+  onGameStart: function(data) {
+  },
+
+  onGameEnd: function(data) {
+  },
+
+  onBlockAdded: function(data) {
+  }
+});
 
 var game = new Phaser.Game(800, 600, Phaser.WEBGL, 'phaser-example', {
   preload: preload,

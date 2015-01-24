@@ -1,14 +1,33 @@
-window.io = require('socket.io-client');
-var socket = io.connect();
+var io = require('socket.io-client');
 
-socket.on('connect', function(){
-  socket.emit('adduser', prompt("What's your name: "));
-});
+module.exports = function(options) {
+  var socket = io.connect();
 
-socket.on('updatechat', function (username, data) {
-  console.log(username, data)
-});
+  socket.on('connect', function(){
+    socket.emit('enter_lobby', options);
+    if (options.onConnect) {
+      options.onConnect();
+    }
+  });
 
-module.exports = {
-  open: function() {}
+  socket.on('game_start', function(data) {
+    if (options.onGameStart) {
+      options.onGameStart(data);
+    }
+  });
+
+  socket.on('game_end', function(data) {
+    if (options.onGameEnd) {
+      options.onGameEnd(data);
+    }
+  });
+
+  // call block_added callback
+  socket.on('block_added', function(data) {
+    if (options.onBlockAdded) {
+      options.onBlockAdded(data);
+    }
+  });
+
+  return socket;
 };
