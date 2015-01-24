@@ -29,11 +29,11 @@ module.exports = class GoodGuy {
   }
 
   update(gridState) {
-    this.row = Math.floor(this.sprite.x / GRID_SIZE_PX);
-    this.col = Math.floor(this.sprite.y / GRID_SIZE_PX);
+    this.col = Math.floor(this.sprite.x / GRID_SIZE_PX);
+    this.row = Math.floor(this.sprite.y / GRID_SIZE_PX);
 
     // set as FALLING when ground is empty
-    if (gridState[this.row][this.col+1] == 0) {
+    if (gridState[this.row + 1] && gridState[this.row + 1][this.col] == 0) {
       this.state = STATE.FALLING;
     }
 
@@ -51,17 +51,18 @@ module.exports = class GoodGuy {
       var direction = (this.direction) ? 1 : -1;
       this.sprite.x += game.time.physicsElapsed * this.acceleration * direction;
 
+      console.log(this.row, this.col + direction, gridState[this.row][this.col + direction])
+
       window.gridState = gridState;
 
-      console.log(
-        this.row, this.col,
-        gridState[this.row] && gridState[this.row][this.col + direction],
-        gridState[this.row - 1] && gridState[this.row - 1][this.col + direction]
-      );
+      if (gridState[this.row][this.col + direction] != 0) {
+        if (gridState[this.row - 1][this.col + direction] == 0) {
+          this.state = STATE.CLIMBING;
 
-      if (gridState[this.row] && gridState[this.row][this.col + direction] != 0 &&
-          gridState[this.row - 1] && gridState[this.row - 1][this.col + direction] == 0) {
-        this.state = STATE.CLIMBING;
+        } else {
+          // Can't climb, invert direction
+          this.direction = !this.direction;
+        }
       }
 
     } else if (this.state == STATE.CLIMBING) {

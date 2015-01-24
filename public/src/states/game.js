@@ -10,6 +10,7 @@ module.exports = class Game {
     this.gridState = new Array(GRID_WIDTH);
 
     this.allBoxes = [];
+    window.allBoxes = this.allBoxes;
     this.allEntities = [];
     this.graphics = null;
 
@@ -100,7 +101,6 @@ module.exports = class Game {
     }
   }
 
-
   createGoodGuy(data) {
     var sprite = this.add.sprite(0, 0, 'box');
     var guy = new GoodGuy(sprite, data);
@@ -130,23 +130,28 @@ module.exports = class Game {
     for (var i = this.allBoxes.length - 1; i >= 0; i--) {
       this.allBoxes[i].accel += GRAVITY;
       this.allBoxes[i].y += this.time.physicsElapsed * this.allBoxes[i].accel;
-      var curCol = Math.ceil(this.allBoxes[i].y / GRID_SIZE_PX);
-      if(curCol != this.allBoxes[i].col) {
-        if(this.gridState[this.allBoxes[i].row][curCol] == 0) {
-          this.gridState[this.allBoxes[i].row][this.allBoxes[i].col] = 0;
-          this.gridState[this.allBoxes[i].row][curCol] = this.allBoxes[i];
-          this.allBoxes[i].col = curCol;
-        }
-        else {
-          this.allBoxes[i].y = this.allBoxes[i].col * GRID_SIZE_PX;
-          this.allBoxes[i].accel = 0;
-        }
-      }
 
       if(this.allBoxes[i].y + GRID_SIZE_PX >= this.height) {
         this.allBoxes[i].y = this.height - GRID_SIZE_PX;
         this.allBoxes[i].accel = 0;
       }
+
+      var nextRow = Math.ceil(this.allBoxes[i].y / GRID_SIZE_PX),
+          curRow = Math.floor(this.allBoxes[i].y / GRID_SIZE_PX);
+
+      if(nextRow != this.allBoxes[i].row) {
+        var targetRow = this.gridState[nextRow] || this.gridState[curRow];
+        if(targetRow[this.allBoxes[i].col] == 0) {
+          this.gridState[this.allBoxes[i].row][this.allBoxes[i].col] = 0;
+          this.gridState[nextRow][this.allBoxes[i].col] = this.allBoxes[i];
+          this.allBoxes[i].row = nextRow;
+        }
+        else {
+          this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
+          this.allBoxes[i].accel = 0;
+        }
+      }
+
     }
   }
 
