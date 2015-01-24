@@ -20,10 +20,10 @@ class BlockCreator {
   createBlock(data) {
     if (this.game) {
       var _game = this.game;
-      var row = data.x;
-      var col = data.y;
-      var posx = row * GRID_SIZE_PX;
-      var posy = col * GRID_SIZE_PX;
+      var col = data.col;
+      var row = data.row;
+      var posx = col * GRID_SIZE_PX;
+      var posy = row * GRID_SIZE_PX;
       var box = _game.add.sprite(posx, posy, 'box');
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;

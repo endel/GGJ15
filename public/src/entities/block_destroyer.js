@@ -8,9 +8,9 @@ class BlockDestroyer {
     this.MESSAGE = MESSAGE;
   }
 
-  isValid(x,y) {
+  isValid(row,col) {
     if(this.game) {
-      if(this.game.gridState[x][y] == 0) {
+      if(this.game.gridState[row][col] == 0) {
         return true;
       }
     }
@@ -20,8 +20,8 @@ class BlockDestroyer {
   destroyBlock(data) {
     if (this.game) {
       var _game = this.game;
-      var row = data.x;
-      var col = data.y;
+      var col = data.col;
+      var row = data.row;
       var box = _game.gridState[row][col];
       if(box){
         var index = _game.allBoxes.indexOf(box);

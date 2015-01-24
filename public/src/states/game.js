@@ -57,6 +57,7 @@ module.exports = class Game {
   }
 
   create() {
+    var that = this;
     this.connect();
 
     // Clean up grid with zeros
@@ -73,22 +74,20 @@ module.exports = class Game {
     //*** CLICK EVENT ***
     //*******************
     this.input.onDown.add(function() {
-      var tool = this.toolLine[0];
-      var row = Math.floor(this.input.x / GRID_SIZE_PX);
-      var col = Math.floor(this.input.y / GRID_SIZE_PX);
+      var tool = that.toolLine[0];
+      var col = Math.floor(that.input.x / GRID_SIZE_PX);
+      var row = Math.floor(that.input.y / GRID_SIZE_PX);
       if(tool.isValid(row, col)) {
         socket.emit(tool.MESSAGE, {
-          x: row,
-          y: col
+          col: col,
+          row: row
         });
+        that.toolLine.shift();
+        that.refillToolLine();
       }
-      this.toolLine.shift();
-      this.toolLine.push(this.tools[Math.floor(Math.random()*2)]);
     }, this);
 
-    for (var i = 0; i < this.toolLineMax; i++) {
-      this.toolLine.push(this.tools[Math.floor(Math.random()*2)]);
-    };
+    this.refillToolLine();
 
     this.graphics.lineStyle(2, 0xFFFFFF);
     for (var i = 0; i <= GRID_WIDTH; i++) {
@@ -109,6 +108,17 @@ module.exports = class Game {
   }
 
   createBadGuy(data) {
+  }
+
+  refillToolLine() {
+    while(this.toolLine.length < this.toolLineMax) {
+      if(this.allBoxes.length < this.toolLineMax) {
+        this.toolLine.push(this.blockCreator);
+      }
+      else {
+        this.toolLine.push(this.tools[Math.floor(Math.random()*this.tools.length)]);
+      }
+    }
   }
 
   update () {
