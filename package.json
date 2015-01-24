@@ -18,7 +18,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify public/src/main.js -t 6to5ify -o public/build/build.js",
-    "watch": "npm run server & watchify public/src/main.js -t 6to5ify -o public/build/build.js",
+    "watch": "watchify public/src/main.js -t 6to5ify -o public/build/build.js & npm run server",
+    "watch-win": "watchify public/src/main.js -t 6to5ify -o public/build/build.js | npm run server",
     "server": "node server.js"
   },
   "repository": {
