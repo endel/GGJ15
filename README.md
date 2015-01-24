@@ -15,3 +15,5 @@ Development
 npm install
 npm run watch
 ```
+
+Access [http://localhost:8080](http://localhost:8080).
