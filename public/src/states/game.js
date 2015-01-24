@@ -1,6 +1,7 @@
 var realtime = require('../realtime');
-var blockCreator = require('../entities/block_creator')
-var blockDestroyer = require('../entities/block_destroyer')
+var BlockCreator = require('../entities/block_creator')
+var BlockDestroyer = require('../entities/block_destroyer')
+var GoodGuy = require('../entities/good_guy')
 //console.log("Realtime: ", realtime);
 
 module.exports = class Game {
