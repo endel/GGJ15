@@ -1,26 +1,27 @@
 var realtime = require('../realtime');
 var blockCreator = require('../entities/block_creator')
 var blockDestroyer = require('../entities/block_destroyer')
-//console.log("Realtime: ", realtime);
+
+var GoodGuy = require('../entities/good_guy.js');
 
 module.exports = class Game {
 
   constructor() {
-    var that = this;
-
-    this.gridWidth = 40;
-    this.gridHeight = 40;
-    this.gridSizePx = 20;
-    this.gridState = new Array(this.gridWidth);
+    this.gridState = new Array(GRID_WIDTH);
 
     this.allBoxes = [];
+    this.allEntities = [];
     this.graphics = null;
 
     this.tools = [ blockCreator, blockDestroyer ];
     this.toolLine = [];
     this.toolLineMax = 3;
 
-    this.currentLevel = window.localStorage.getItem('level') || 1;
+    this.currentLevel = window.localStorage.getItem('level') || 0;
+  }
+
+  connect() {
+    var that = this;
 
     this.socket = realtime({
       level: this.currentLevel,
@@ -32,6 +33,7 @@ module.exports = class Game {
 
       onGameStart: function(data) {
         console.log("onGameStart", data)
+        that.createGoodGuy({x: 11, y: 10});
       },
 
       onGameEnd: function(data) {
@@ -45,11 +47,13 @@ module.exports = class Game {
     });
   }
 
-  create()
-  {
-    for (var i = this.gridWidth - 1; i >= 0; i--) {
-      this.gridState[i] = new Array(this.gridHeight);
-      for (var j = this.gridHeight - 1; j >= 0; j--) {
+  create() {
+    this.connect();
+
+    // Clean up grid with zeros
+    for (var i = GRID_WIDTH - 1; i >= 0; i--) {
+      this.gridState[i] = new Array(GRID_HEIGHT);
+      for (var j = GRID_HEIGHT - 1; j >= 0; j--) {
         this.gridState[i][j] = 0;
       }
     }
@@ -68,39 +72,51 @@ module.exports = class Game {
     };
 
     this.graphics.lineStyle(2, 0xFFFFFF);
-    for (var i = 0; i <= this.gridWidth; i++) {
-      this.graphics.moveTo(i*this.gridSizePx, 0);
-      this.graphics.lineTo(i*this.gridSizePx, this.gridSizePx*this.gridHeight);
+    for (var i = 0; i <= GRID_WIDTH; i++) {
+      this.graphics.moveTo(i*GRID_SIZE_PX, 0);
+      this.graphics.lineTo(i*GRID_SIZE_PX, GRID_SIZE_PX*GRID_HEIGHT);
     }
-    for (var j = 0; j <= this.gridHeight; j++) {
-      this.graphics.moveTo(0, j*this.gridSizePx);
-      this.graphics.lineTo(this.gridSizePx*this.gridWidth, j*this.gridSizePx);
+    for (var j = 0; j <= GRID_HEIGHT; j++) {
+      this.graphics.moveTo(0, j*GRID_SIZE_PX);
+      this.graphics.lineTo(GRID_SIZE_PX*GRID_WIDTH, j*GRID_SIZE_PX);
     }
   }
 
   createBox(data) {
-    var row = Math.floor(data.x / this.gridSizePx);
-    var col = Math.floor(data.y / this.gridSizePx);
-    var posx = row * this.gridSizePx;
-    var posy = col * this.gridSizePx;
+    var row = Math.floor(data.x / GRID_SIZE_PX);
+    var col = Math.floor(data.y / GRID_SIZE_PX);
+    var posx = row * GRID_SIZE_PX;
+    var posy = col * GRID_SIZE_PX;
     var box = this.add.sprite(posx, posy, 'box');
-    box.width = this.gridSizePx;
-    box.height = this.gridSizePx;
+    box.width = GRID_SIZE_PX;
+    box.height = GRID_SIZE_PX;
     this.gridState[row][col] = box;
     box.col = col;
     box.row = row;
+    box.accel = 0;
     this.allBoxes.push(box);
     console.log("createBox");
   }
 
+  createGoodGuy(data) {
+    var sprite = this.add.sprite(0, 0, 'box');
+    var guy = new GoodGuy(sprite, data);
+    this.allEntities.push(guy);
+  }
+
+  createBadGuy(data) {
+  }
+
   update () {
+
+    for (var i = this.allEntities.length - 1; i >= 0; i--) {
+      this.allEntities[i].update(this.gridState);
+    }
+
     for (var i = this.allBoxes.length - 1; i >= 0; i--) {
-      if (!this.allBoxes[i].accel) {
-        this.allBoxes[i].accel = 0;
-      }
-      this.allBoxes[i].accel += 10;
+      this.allBoxes[i].accel += GRAVITY;
       this.allBoxes[i].y += this.time.physicsElapsed * this.allBoxes[i].accel;
-      var curCol = Math.ceil(this.allBoxes[i].y / this.gridSizePx);
+      var curCol = Math.ceil(this.allBoxes[i].y / GRID_SIZE_PX);
       if(curCol != this.allBoxes[i].col) {
         if(this.gridState[this.allBoxes[i].row][curCol] == 0) {
           this.gridState[this.allBoxes[i].row][this.allBoxes[i].col] = 0;
@@ -108,12 +124,13 @@ module.exports = class Game {
           this.allBoxes[i].col = curCol;
         }
         else {
-          this.allBoxes[i].y = this.allBoxes[i].col * this.gridSizePx;
+          this.allBoxes[i].y = this.allBoxes[i].col * GRID_SIZE_PX;
           this.allBoxes[i].accel = 0;
         }
       }
-      if(this.allBoxes[i].y + this.gridSizePx >= this.height) {
-        this.allBoxes[i].y = this.height - this.gridSizePx;
+
+      if(this.allBoxes[i].y + GRID_SIZE_PX >= this.height) {
+        this.allBoxes[i].y = this.height - GRID_SIZE_PX;
         this.allBoxes[i].accel = 0;
       }
     }

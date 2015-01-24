@@ -13,7 +13,7 @@ Development
 
 ```
 npm install
-npm run watch
+npm start
 ```
 
 Access [http://localhost:8080](http://localhost:8080).

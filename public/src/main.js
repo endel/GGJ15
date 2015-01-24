@@ -1,13 +1,15 @@
-var
-    // game states
-    Boot = require('./states/boot'),
+// game states
+var Boot = require('./states/boot'),
     Preloader = require('./states/preloader'),
     MainMenu = require('./states/main_menu'),
     Game = require('./states/game'),
-    EndGame = require('./states/end_game'),
+    EndGame = require('./states/end_game');
 
-    // game elements
-    GoodGuy = require('./entities/good_guy.js');
+
+window.GRID_WIDTH = 40;
+window.GRID_HEIGHT = 40;
+window.GRID_SIZE_PX = 20;
+window.GRAVITY = 10;
 
 window.game = new Phaser.Game(800, 800, Phaser.AUTO, 'ggj');
 
