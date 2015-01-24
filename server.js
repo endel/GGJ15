@@ -53,6 +53,7 @@ io.sockets.on('connection', function(client) {
           console.log("Clients to join: ", clientsToJoin[i])
           // Team 0 OR Team 1 ?
           clientsToJoin[i].data.team = (i < maxPlayersPerLevel[level] / 2) ? 0 : 1;
+          clientsToJoin[i].room = uniqRoomName;
           clientsToJoin[i].leave(clientsToJoin[i].room);
           clientsToJoin[i].join(uniqRoomName);
 
@@ -86,6 +87,10 @@ io.sockets.on('connection', function(client) {
       }
     }
 
+  });
+
+  client.on('add_block', function(data) {
+    io.sockets.in(client.room).emit('block_added', data);
   });
 
   // client.on('switchRoom', function(newroom) {

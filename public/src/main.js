@@ -11,12 +11,16 @@ var socket = realtime({
   },
 
   onGameStart: function(data) {
+    console.log("onGameStart", data)
   },
 
   onGameEnd: function(data) {
+    console.log("onGameEnd", data)
   },
 
   onBlockAdded: function(data) {
+    console.log("onBlockAdded", data);
+    createBox(data);
   }
 });
 
@@ -68,12 +72,27 @@ function create() {
   // game.physics.p2.updateBoundsCollisionGroup();
 
   graphics = game.add.graphics(0, 0);
-  game.input.onDown.add(createBox, this);
+  game.input.onDown.add(function() {
+    socket.emit('add_block', {
+      x: game.input.x,
+      y: game.input.y
+    });
+  }, this);
+
+  graphics.lineStyle(2, 0xFFFFFF);
+  for (var i = 0; i <= gridWidth; i++) {
+    graphics.moveTo(i*gridSizePx, 0);
+    graphics.lineTo(i*gridSizePx, gridSizePx*gridHeight);
+  }
+  for (var j = 0; j <= gridHeight; j++) {
+    graphics.moveTo(0, j*gridSizePx);
+    graphics.lineTo(gridSizePx*gridWidth, j*gridSizePx);
+  }
 }
 
-function createBox() {
-  var row = Math.floor(game.input.x / gridSizePx);
-  var col = Math.floor(game.input.y / gridSizePx);
+function createBox(data) {
+  var row = Math.floor(data.x / gridSizePx);
+  var col = Math.floor(data.y / gridSizePx);
   var posx = row * gridSizePx;
   var posy = col * gridSizePx;
   //console.log("x: ", game.input.x, " posx:", posx, " | y:", game.input.y, " posy:", posy);
@@ -103,6 +122,7 @@ function createBox() {
     }
   }*/
   allBoxes.push(box);
+  console.log("createBox");
 }
 
 function update () {
