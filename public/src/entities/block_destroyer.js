@@ -6,6 +6,6 @@ class BlockDestroyer {
 
 }
 
-// BlockDestroyer.MESSAGE = "rem_block";
+BlockDestroyer.MESSAGE = "rem_block";
 
 module.exports = BlockDestroyer

@@ -16,7 +16,7 @@ module.exports = class Game {
     this.allBoxes = [];
     this.graphics = null;
 
-    this.tools = [ blockCreator, blockDestroyer];
+    this.tools = [ blockCreator, blockDestroyer ];
     this.toolLine = [];
     this.toolLineMax = 3;
 
@@ -64,7 +64,7 @@ module.exports = class Game {
     }, this);
 
     for (var i = 0; i < this.toolLineMax; i++) {
-      this.toolLine.push(tools[Math.floor(Math.random()*2)]);
+      this.toolLine.push(this.tools[Math.floor(Math.random()*2)]);
     };
 
     this.graphics.lineStyle(2, 0xFFFFFF);
@@ -124,7 +124,7 @@ module.exports = class Game {
     for (var i = 0; i < this.toolLine.length; i++) {
        line.push(this.toolLine[i].MESSAGE);
     }
-    game.debug.text(line.toString(), 0, 50, 0xFF0000);
+    game.debug.text("Tools:" + line.toString(), 0, 50, 0xFF0000);
   }
 
 }
