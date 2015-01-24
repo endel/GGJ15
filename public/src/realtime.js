@@ -1,5 +1,5 @@
-var io = require('socket.io-client');
-var socket = io.connect('http://localhost:3000');
+window.io = require('socket.io-client');
+var socket = io.connect();
 
 socket.on('connect', function(){
   socket.emit('adduser', prompt("What's your name: "));
