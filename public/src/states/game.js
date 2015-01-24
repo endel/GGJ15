@@ -6,9 +6,9 @@ module.exports = class Game {
   constructor() {
     var that = this;
 
-    this.gridWidth = 16;
-    this.gridHeight = 12;
-    this.gridSizePx = 50;
+    this.gridWidth = 40;
+    this.gridHeight = 40;
+    this.gridSizePx = 20;
     this.gridState = new Array(this.gridWidth);
 
     this.allBoxes = [];
@@ -110,7 +110,7 @@ module.exports = class Game {
   }
 
   render() {
-    game.debug.text(this.gridState.toString(), 0, 50);
+    //game.debug.text(this.gridState.toString(), 0, 50);
   }
 
 }
