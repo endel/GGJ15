@@ -48,7 +48,7 @@ module.exports = class Preloader {
     // }
 
     console.log("Goto main menu")
-    this.state.start('MainMenu');
+    this.state.start('Game');
 
   }
 

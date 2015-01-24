@@ -3,9 +3,9 @@ var io = require('socket.io-client');
 module.exports = function(options) {
   var socket = io.connect();
 
-  socket.on('connect', function(session) {
-    console.log("Connect...", session);
-    socket.emit('enter_lobby', options, session);
+  socket.on('connect', function() {
+    console.log("Connect...");
+    socket.emit('enter_lobby', options);
     if (options.onConnect) {
       options.onConnect();
     }

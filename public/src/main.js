@@ -1,40 +1,15 @@
-var realtime = require('./realtime'),
-    currentLevel = window.localStorage.getItem('level') || 1,
-
+var
     // game states
     Boot = require('./states/boot'),
-    EndGame = require('./states/end_game'),
-    Game = require('./states/game'),
-    MainMenu = require('./states/main_menu'),
     Preloader = require('./states/preloader'),
+    MainMenu = require('./states/main_menu'),
+    Game = require('./states/game'),
+    EndGame = require('./states/end_game'),
 
     // game elements
     GoodGuy = require('./entities/good_guy.js');
 
-var socket = realtime({
-  level: currentLevel,
-
-  onConnect: function(data) {
-    console.log(socket);
-    window.socket = socket;
-    // socket.emit('game_end');
-  },
-
-  onGameStart: function(data) {
-    console.log("onGameStart", data)
-  },
-
-  onGameEnd: function(data) {
-    console.log("onGameEnd", data)
-  },
-
-  onBlockAdded: function(data) {
-    console.log("onBlockAdded", data);
-    createBox(data);
-  }
-});
-
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'ggj');
+window.game = new Phaser.Game(800, 600, Phaser.AUTO, 'ggj');
 
 // Add the States your game has.
 // You don't have to do this in the html, it could be done in your Boot state too, but for simplicity I'll keep it here.
@@ -45,69 +20,3 @@ game.state.add('Game', Game);
 
 // Now start the Boot state.
 game.state.start('Boot');
-
-/*
-
-
-var gridWidth = 16;
-var gridHeight = 15;
-var gridSizePx = 50;
-
-var allBoxes = [];
-var graphics = null;
-
-function preload() {
-  //  You can fill the preloader with as many assets as your game requires
-
-  //  Here we are loading an image. The first parameter is the unique
-  //  string by which we'll identify the image later in our code.
-
-  //  The second parameter is the URL of the image (relative)
-  game.load.image('box', 'assets/images/elementos_01.png');
-}
-
-function create() {
-
-  game.physics.startSystem(Phaser.Physics.ARCADE);
-  game.physics.arcade.gravity.y = 250;
-
-  graphics = game.add.graphics(0, 0);
-  game.input.onDown.add(function() {
-    socket.emit('add_block', {
-      x: game.input.x,
-      y: game.input.y
-    });
-  }, this);
-
-  graphics.lineStyle(2, 0xFFFFFF);
-  for (var i = 0; i <= gridWidth; i++) {
-    graphics.moveTo(i*gridSizePx, 0);
-    graphics.lineTo(i*gridSizePx, gridSizePx*gridHeight);
-  }
-  for (var j = 0; j <= gridHeight; j++) {
-    graphics.moveTo(0, j*gridSizePx);
-    graphics.lineTo(gridSizePx*gridWidth, j*gridSizePx);
-  }
-}
-
-function createBox(data) {
-  console.log("createBox");
-  var posx = data.x;
-  var posy = data.y;
-  //var box = new Phaser.Rectangle(posx, posy, gridSizePx, gridSizePx);
-  var box = game.add.sprite(posx, posy, 'box');
-  box.width = gridSizePx;
-  box.height = gridSizePx;
-  game.physics.enable(box, Phaser.Physics.ARCADE);
-  box.body.collideWorldBounds = true;
-  box.body.allowGravity = true;
-  box.body.bounce.y = 0.1;
-  allBoxes.push(box);
-}
-
-function update () {
-}
-
-function render() {
-}
-*/
