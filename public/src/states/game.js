@@ -1,5 +1,7 @@
 var realtime = require('../realtime');
-console.log("Realtime: ", realtime);
+var blockCreator = require('../entities/block_creator')
+var blockDestroyer = require('../entities/block_destroyer')
+//console.log("Realtime: ", realtime);
 
 module.exports = class Game {
 
@@ -13,6 +15,10 @@ module.exports = class Game {
 
     this.allBoxes = [];
     this.graphics = null;
+
+    this.tools = [ blockCreator, blockDestroyer];
+    this.toolLine = [];
+    this.toolLineMax = 3;
 
     this.currentLevel = window.localStorage.getItem('level') || 1;
 
@@ -56,6 +62,10 @@ module.exports = class Game {
         y: this.input.y
       });
     }, this);
+
+    for (var i = 0; i < this.toolLineMax; i++) {
+      this.toolLine.push(tools[Math.floor(Math.random()*2)]);
+    };
 
     this.graphics.lineStyle(2, 0xFFFFFF);
     for (var i = 0; i <= this.gridWidth; i++) {
@@ -110,7 +120,11 @@ module.exports = class Game {
   }
 
   render() {
-    //game.debug.text(this.gridState.toString(), 0, 50);
+    var line = [];
+    for (var i = 0; i < this.toolLine.length; i++) {
+       line.push(this.toolLine[i].MESSAGE);
+    }
+    game.debug.text(line.toString(), 0, 50, 0xFF0000);
   }
 
 }

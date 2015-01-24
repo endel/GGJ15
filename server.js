@@ -96,6 +96,10 @@ io.sockets.on('connection', function(client) {
     io.sockets.in(client.room).emit('block_added', data);
   });
 
+  client.on('rem_block', function(data) {
+    io.sockets.in(client.room).emit('block_removed', data);
+  });
+
   // client.on('switchRoom', function(newroom) {
   //   var oldroom;
   //   oldroom = client.room;
