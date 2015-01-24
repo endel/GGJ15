@@ -1,6 +1,6 @@
 var realtime = require('../realtime');
-var blockCreator = require('../entities/block_creator')
-var blockDestroyer = require('../entities/block_destroyer')
+var BlockCreator = require('../entities/block_creator')
+var BlockDestroyer = require('../entities/block_destroyer')
 //console.log("Realtime: ", realtime);
 
 module.exports = class Game {
@@ -16,7 +16,10 @@ module.exports = class Game {
     this.allBoxes = [];
     this.graphics = null;
 
-    this.tools = [ blockCreator, blockDestroyer ];
+    this.blockCreator = new BlockCreator(this);
+    this.blockDestroyer = new BlockDestroyer(this);
+    this.tools = [this.blockCreator, this.blockDestroyer];
+
     this.toolLine = [];
     this.toolLineMax = 3;
 
@@ -40,7 +43,13 @@ module.exports = class Game {
 
       onBlockAdded: function(data) {
         console.log("onBlockAdded", data);
-        that.createBox(data);
+        //that.createBox(data);
+        that.blockCreator.createBox(data);
+      },
+
+      onBlockRemoved: function(data) {
+        console.log("onBlockRemoved", data);
+        that.blockDestroyer.destroyBox(data);
       }
     });
   }
@@ -56,11 +65,21 @@ module.exports = class Game {
     this.load.image('box', 'assets/images/elementos_01.png');
 
     this.graphics = this.add.graphics(0, 0);
+    //*******************
+    //*** CLICK EVENT ***
+    //*******************
     this.input.onDown.add(function() {
-      socket.emit('add_block', {
-        x: this.input.x,
-        y: this.input.y
-      });
+      var tool = this.toolLine[0];
+      var row = Math.floor(this.input.x / this.gridSizePx);
+      var col = Math.floor(this.input.y / this.gridSizePx);
+      if(tool.isValid(row, col)) {
+        socket.emit(tool.MESSAGE, {
+          x: row,
+          y: col
+        });
+      }
+      this.toolLine.shift();
+      this.toolLine.push(this.tools[Math.floor(Math.random()*2)]);
     }, this);
 
     for (var i = 0; i < this.toolLineMax; i++) {
@@ -91,6 +110,20 @@ module.exports = class Game {
     box.row = row;
     this.allBoxes.push(box);
     console.log("createBox");
+  }
+
+  destroyBox(data) {
+    var row = Math.floor(data.x / this.gridSizePx);
+    var col = Math.floor(data.y / this.gridSizePx);
+    var box = this.gridState[row][col];
+    if(box){
+      var index = this.allBoxes.indexOf(box);
+      if(index > -1){
+        this.allBoxes.splice(index, 1);
+      }
+      this.gridState[row][col] = 0;
+      box.destroy();
+    }
   }
 
   update () {
@@ -124,7 +157,7 @@ module.exports = class Game {
     for (var i = 0; i < this.toolLine.length; i++) {
        line.push(this.toolLine[i].MESSAGE);
     }
-    game.debug.text("Tools:" + line.toString(), 0, 50, 0xFF0000);
+    game.debug.text("Tools:" + line.toString(), 0, 55, 'rgb(255,255,0)');
   }
 
 }
