@@ -46,12 +46,12 @@ module.exports = class Game {
       onBlockAdded: function(data) {
         console.log("onBlockAdded", data);
         //that.createBox(data);
-        that.blockCreator.createBox(data);
+        that.blockCreator.createBlock(data);
       },
 
       onBlockRemoved: function(data) {
         console.log("onBlockRemoved", data);
-        that.blockDestroyer.destroyBox(data);
+        that.blockDestroyer.destroyBlock(data);
       }
     });
   }
@@ -74,8 +74,8 @@ module.exports = class Game {
     //*******************
     this.input.onDown.add(function() {
       var tool = this.toolLine[0];
-      var row = Math.floor(this.input.x / this.gridSizePx);
-      var col = Math.floor(this.input.y / this.gridSizePx);
+      var row = Math.floor(this.input.x / GRID_SIZE_PX);
+      var col = Math.floor(this.input.y / GRID_SIZE_PX);
       if(tool.isValid(row, col)) {
         socket.emit(tool.MESSAGE, {
           x: row,

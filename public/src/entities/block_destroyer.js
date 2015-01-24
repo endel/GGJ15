@@ -17,11 +17,11 @@ class BlockDestroyer {
     return false;
   }
 
-  destroyBox(data) {
+  destroyBlock(data) {
     if (this.game) {
       var _game = this.game;
-      var row = Math.floor(data.x / _game.gridSizePx);
-      var col = Math.floor(data.y / _game.gridSizePx);
+      var row = data.x;
+      var col = data.y;
       var box = _game.gridState[row][col];
       if(box){
         var index = _game.allBoxes.indexOf(box);

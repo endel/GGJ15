@@ -20,13 +20,13 @@ class BlockCreator {
   createBlock(data) {
     if (this.game) {
       var _game = this.game;
-      var row = Math.floor(data.x / _game.gridSizePx);
-      var col = Math.floor(data.y / _game.gridSizePx);
-      var posx = row * _game.gridSizePx;
-      var posy = col * _game.gridSizePx;
+      var row = data.x;
+      var col = data.y;
+      var posx = row * GRID_SIZE_PX;
+      var posy = col * GRID_SIZE_PX;
       var box = _game.add.sprite(posx, posy, 'box');
-      box.width = _game.gridSizePx;
-      box.height = _game.gridSizePx;
+      box.width = GRID_SIZE_PX;
+      box.height = GRID_SIZE_PX;
       _game.gridState[row][col] = box;
       box.col = col;
       box.row = row;
