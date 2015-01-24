@@ -5,6 +5,9 @@ var io = require('socket.io')(server);
 var _ = require('lodash');
 var shortId = require('shortid');
 
+var browserify = require('browserify');
+var browserify_6to5ify = require('6to5ify');
+
 var clients = {};
 var rooms = [];
 
@@ -118,6 +121,17 @@ io.sockets.on('connection', function(client) {
 // Express
 //
 app.use(express.static(__dirname + '/public'));
+app.get('/build/build.js', function(req, res) {
+  res.setHeader('Content-type', 'text/javascript');
+  var browserify = require('browserify');
+  var b = browserify();
+  b.transform(browserify_6to5ify);
+  b.add('./public/src/main.js');
+  b.bundle().pipe(res);
+
+  // res.send();
+
+});
 
 var port = process.env.PORT || 3000;
 server.listen(port);
