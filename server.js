@@ -1,5 +1,8 @@
 // http://stackoverflow.com/questions/19156636/node-js-and-socket-io-creating-room
-var io = require('socket.io')();
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
 var usernames = {};
 
@@ -45,4 +48,17 @@ io.sockets.on('connection', function(socket) {
   });
 });
 
-io.listen(3000);
+
+//
+// Express
+//
+app.use(express.static(__dirname + '/public'));
+
+var port = process.env.PORT || 3000;
+app.listen(port, function() {
+  console.log("Express server listening on port %d in %s mode", port, app.settings.env);
+});
+
+// app.get('/', function (req, res) {
+//   res.render('index.ejs');
+// });
