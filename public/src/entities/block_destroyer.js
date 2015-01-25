@@ -71,14 +71,16 @@ class BlockDestroyer {
         }
       }
       var col = data.col;
-      var row = _game.myTeam != data.team ? GRID_HEIGHT - data.row - 1: data.row;
-      var box = _game.gridState[row][col];
+      var row = data.row;
+      var grid = _game.myTeam != data.team ? _game.theirGridState : _game.gridState;
+      var box = grid[row][col];
+      var objArray = _game.myTeam != data.team ? _game.allTheirBoxes : _game.allBoxes;
       if(box){
-        var index = _game.allBoxes.indexOf(box);
+        var index = objArray.indexOf(box);
         if(index > -1){
-          _game.allBoxes.splice(index, 1);
+          objArray.splice(index, 1);
         }
-        _game.gridState[row][col] = 0;
+        grid[row][col] = 0;
         box.destroy();
       }
     }

@@ -30,7 +30,7 @@ class BlockCreator {
         }
       }
       var col = data.col;
-      var row = _game.myTeam != data.team ? GRID_HEIGHT - data.row - 1 : data.row;
+      var row = data.row;
       var posx = col * GRID_SIZE_PX;
       var posy = row * GRID_SIZE_PX;
       var group = _game.myTeam != data.team ? _game.theirObjects : _game.ourObjects;
