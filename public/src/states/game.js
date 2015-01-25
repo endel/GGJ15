@@ -52,7 +52,7 @@ module.exports = class Game {
 
       onBlockRemoved: function(data) {
         console.log("onBlockRemoved", data);
-        that.blockDestroyer.destroyBlock(data);
+        that.blockDestroyer.createAntiBlock(data);
       }
     });
   }
@@ -68,7 +68,6 @@ module.exports = class Game {
         this.gridState[i][j] = 0;
       }
     }
-    this.load.image('box', 'assets/images/elementos_01.png');
 
     this.graphics = this.add.graphics(0, 0);
     //*******************
@@ -102,7 +101,7 @@ module.exports = class Game {
   }
 
   createGoodGuy(data) {
-    var sprite = this.add.sprite(0, 0, 'box');
+    var sprite = this.add.sprite(0, 0, 'good_guy');
     var guy = new GoodGuy(sprite, data);
     this.allEntities.push(guy);
   }
@@ -134,6 +133,10 @@ module.exports = class Game {
       if(this.allBoxes[i].y + GRID_SIZE_PX >= this.height) {
         this.allBoxes[i].y = this.height - GRID_SIZE_PX;
         this.allBoxes[i].accel = 0;
+        if(this.allBoxes[i].antiblock) {
+          this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
+          continue;
+        }
       }
 
       var nextRow = Math.ceil(this.allBoxes[i].y / GRID_SIZE_PX),
@@ -147,12 +150,18 @@ module.exports = class Game {
           this.allBoxes[i].row = nextRow;
         }
         else {
-          this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
-          this.allBoxes[i].accel = 0;
+          if(this.allBoxes[i].antiblock) {
+            this.blockDestroyer.addToRemoveList(targetRow[this.allBoxes[i].col]);
+            this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
+          }
+          else {
+            this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
+            this.allBoxes[i].accel = 0;
+          }
         }
       }
-
     }
+    this.blockDestroyer.removeBlocks();
   }
 
   render() {
