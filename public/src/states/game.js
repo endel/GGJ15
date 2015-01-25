@@ -60,8 +60,10 @@ module.exports = class Game {
           }
           else {
             that.cursorDenied = that.foregroud.create(that.input.x, that.input.y, 'cursor-denied');
-            that.cursorDenied.lifespan = 500;
+            that.cursorDenied.lifespan = 1500;
             that.cursorDenied.anchor.set(0.5, 0.5);
+            game.add.tween(that.cursorDenied).to({ alpha: 0}, 500, Phaser.Easing.Cubic.Out, true).delay(1000);
+
           }
         }, that);
         that.myTeam = -1;
