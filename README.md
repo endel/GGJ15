@@ -16,4 +16,4 @@ npm install
 npm start
 ```
 
-Access [http://localhost:8080](http://localhost:8080).
+Access [http://localhost:3000](http://localhost:3000).
