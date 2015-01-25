@@ -44,7 +44,7 @@ module.exports = class Preloader {
     this.load.audio('audio-block-metal', 'assets/audio/sons/blocks/block_metal.mp3');
     this.load.audio('audio-block-paper', 'assets/audio/sons/blocks/block_paper.mp3');
     this.load.audio('audio-bomb', 'assets/audio/sons/bomb/create_bomb.mp3');
-    this.load.audio('audio-bomb-explode', 'assets/audio/sons/bomb/exposion_bomb.mp3');
+    this.load.audio('audio-bomb-explode', 'assets/audio/sons/bomb/explosion_bomb.mp3');
     this.load.audio('audio-guy-walking', 'assets/audio/sons/steps/steps.mp3');
     this.load.audio('audio-guy-fall', 'assets/audio/sons/fall/fall.mp3');
     this.load.audio('audio-guy-jump', 'assets/audio/sons/jump/jump.mp3');
