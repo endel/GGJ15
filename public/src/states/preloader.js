@@ -22,7 +22,11 @@ module.exports = class Preloader {
 
     // Here we load the rest of the assets our game needs.
     // As this is just a Project Template I've not provided these assets, swap them for your own.
-    this.load.image('box', 'assets/images/elementos_01.png');
+    this.load.image('good_guy', 'assets/images/character_png still 85px.png');
+    this.load.image('block_trash', 'assets/images/elementos_01.png');
+    this.load.image('block_paper', 'assets/images/elementos_02c 85px.png');
+    this.load.image('block_car', 'assets/images/elementos_03c 85px.png');
+    this.load.image('block_toilet', 'assets/images/elementos_04a 85px.png');
     this.load.audio('music-background', 'assets/sound/sample_song.mp3');
   }
 
