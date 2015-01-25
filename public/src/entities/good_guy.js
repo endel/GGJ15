@@ -35,11 +35,27 @@ module.exports = class GoodGuy {
     this.sprite.width = this.spriteScale * this.sprite.width;
 
     this.sprite.events.onAnimationComplete.add(function(anim) {
+      if (this.state == STATE.TURNING) {
+        // Can't climb, invert direction
+        this.sprite.scale.x *= -1;
+        this.direction = !this.direction;
+
+        // fix anchor for inverted direction
+        if (this.sprite.scale.x < 0) {
+          this.sprite.anchor.setTo(1, 0);
+        } else {
+          this.sprite.anchor.setTo(0, 0);
+        }
+      }
+
       // 136x170
       // 100x100
+      if (this.state == STATE.CLIMBING || this.state == STATE.CLIMBING_DOWN) {
+        this.sprite.x = this.targetClimbingCol * GRID_SIZE_PX;
+        this.sprite.y = this.targetClimbingRow * GRID_SIZE_PX;
+      }
+
       this.state = STATE.WALKING;
-      this.sprite.x = this.targetClimbingCol * GRID_SIZE_PX;
-      this.sprite.y = this.targetClimbingRow * GRID_SIZE_PX;
     }, this);
 
     //
@@ -118,11 +134,16 @@ module.exports = class GoodGuy {
     } else if (this.state == STATE.WALKING) {
       var willInvertDirection = false;
 
-      this.sprite.x += game.time.physicsElapsed * this.acceleration * direction;
+      if (typeof(gridState[this.row][this.col + this.direction]) !== "undefined") {
+        this.sprite.x += game.time.physicsElapsed * this.acceleration * direction;
+      } else {
+        willInvertDirection = true;
+      }
 
       // fix direction for checking gridState
       if (direction == -1) direction = 0;
 
+      console.log(gridState[this.row][this.col + direction]);
       if (typeof(gridState[this.row][this.col + direction]) !== "undefined" &&
           gridState[this.row][this.col + direction] != 0 &&
           gridState[this.row][this.col + direction].accel == 0) {
@@ -155,26 +176,14 @@ module.exports = class GoodGuy {
           this.sprite.y += 10 * this.spriteScale;
           this.sprite.x += 36 * ((this.direction) ? 1 : -1.7) * this.spriteScale;
 
-        } else if (gridState[this.row + 2] && gridState[this.row + 2][this.col + direction] == 0) {
-          console.log("invert")
-          willInvertDirection = true;
+        // } else if (gridState[this.row + 2] && gridState[this.row + 2][this.col + direction] == 0) {
+        //   console.log("invert")
+        //   willInvertDirection = true;
         }
       }
 
       if (willInvertDirection) {
         this.state = STATE.TURNING;
-
-        // Can't climb, invert direction
-        this.sprite.scale.x *= -1;
-
-        // fix anchor for inverted direction
-        if (this.sprite.scale.x < 0) {
-          this.sprite.anchor.setTo(1, 0);
-        } else {
-          this.sprite.anchor.setTo(0, 0);
-        }
-
-        this.direction = !this.direction;
       }
     }
 

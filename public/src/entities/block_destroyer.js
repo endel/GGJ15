@@ -81,6 +81,31 @@ class BlockDestroyer {
           objArray.splice(index, 1);
         }
         grid[row][col] = 0;
+
+        var removeEffect = this.game.add.sprite(col * GRID_SIZE_PX, row * GRID_SIZE_PX, 'miscelaneous');
+        removeEffect.width = box.width;
+        removeEffect.height = box.height;
+        var defaultAnimation = removeEffect.animations.add('default', [
+          'subtracao_07941.png',
+          'subtracao_07942.png',
+          'subtracao_07943.png',
+          'subtracao_07944.png',
+          'subtracao_07945.png',
+          'subtracao_07946.png',
+          'subtracao_07947.png',
+          'subtracao_07948.png',
+          'subtracao_07949.png',
+          'subtracao_07950.png',
+          'subtracao_07951.png',
+          'subtracao_07952.png',
+          'subtracao_07953.png',
+          'subtracao_07954.png',
+          'subtracao_07955.png',
+          'subtracao_07956.png',
+        ], 24, false, false);
+        defaultAnimation.killOnComplete = true;
+        removeEffect.play('default');
+
         box.destroy();
       }
     }

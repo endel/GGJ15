@@ -145,6 +145,8 @@ module.exports = class Game {
   }
 
   createGoodGuy(data) {
+    console.log("create good guy", data);
+
     var that = this;
     setTimeout(function(){
       that.ourObjects = that.ourObjects || that.add.group();
