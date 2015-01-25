@@ -118,6 +118,8 @@ module.exports = class Game {
 
     this.refillToolLine();
 
+    that.createGoodGuy({x: 11, y: 10});
+
     /*this.graphics.lineStyle(2, 0xFFFFFF);
     for (var i = 0; i <= GRID_WIDTH; i++) {
       this.graphics.moveTo(i*GRID_SIZE_PX, 0);
@@ -138,16 +140,146 @@ module.exports = class Game {
         for (var j = 0; j < that.teams[i].length; j++) {
           var ldata = _.clone(data);
           ldata.team = i;
-          var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
-          if(ldata.team != that.myTeam) {
+       var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
+
+      sprite.animations.add('walk', [
+        'walk_cycle_00000.png',
+        'walk_cycle_00001.png',
+        'walk_cycle_00002.png',
+        'walk_cycle_00003.png',
+        'walk_cycle_00004.png',
+        'walk_cycle_00005.png',
+        'walk_cycle_00006.png',
+        'walk_cycle_00007.png',
+        'walk_cycle_00008.png',
+        'walk_cycle_00009.png',
+        'walk_cycle_00010.png',
+        'walk_cycle_00011.png',
+        'walk_cycle_00012.png',
+        'walk_cycle_00013.png',
+        'walk_cycle_00014.png',
+        'walk_cycle_00015.png',
+        'walk_cycle_00016.png',
+        'walk_cycle_00017.png',
+        'walk_cycle_00018.png',
+        'walk_cycle_00019.png',
+      ], 24, true, false);
+
+      sprite.animations.add('jump', [
+        'jump_UP_01_00000.png',
+        'jump_UP_01_00001.png',
+        'jump_UP_01_00002.png',
+        'jump_UP_01_00003.png',
+        'jump_UP_01_00004.png',
+        'jump_UP_01_00005.png',
+        'jump_UP_01_00006.png',
+        'jump_UP_01_00007.png',
+        'jump_UP_01_00008.png',
+        'jump_UP_01_00009.png',
+        'jump_UP_01_00010.png',
+        'jump_UP_01_00011.png',
+        'jump_UP_01_00012.png',
+        'jump_UP_01_00013.png',
+        'jump_UP_01_00014.png',
+        'jump_UP_01_00015.png',
+        'jump_UP_01_00016.png',
+        'jump_UP_01_00017.png',
+        'jump_UP_01_00018.png',
+        'jump_UP_01_00019.png',
+        'jump_UP_01_00020.png',
+        'jump_UP_01_00021.png',
+        'jump_UP_01_00022.png',
+        'jump_UP_01_00023.png',
+        'jump_UP_01_00024.png',
+        'jump_UP_01_00025.png',
+        'jump_UP_01_00026.png',
+        'jump_UP_01_00027.png',
+        'jump_UP_01_00028.png',
+        'jump_UP_01_00029.png',
+        'jump_UP_01_00030.png',
+        'jump_UP_01_00031.png',
+        'jump_UP_01_00032.png',
+        'jump_UP_01_00033.png',
+        'jump_UP_01_00034.png',
+        'jump_UP_01_00035.png',
+        'jump_UP_01_00036.png',
+        'jump_UP_01_00037.png',
+        'jump_UP_01_00038.png',
+        'jump_UP_01_00039.png',
+        'jump_UP_01_00040.png',
+        'jump_UP_01_00041.png',
+        'jump_UP_01_00042.png',
+        'jump_UP_01_00043.png',
+        'jump_UP_01_00044.png',
+        'jump_UP_01_00045.png',
+        'jump_UP_01_00046.png',
+        'jump_UP_01_00047.png',
+      ], 24, false, false);
+
+      sprite.animations.add('jump_down', [
+        'jump_DOWN_02_00000.png',
+        'jump_DOWN_02_00001.png',
+        'jump_DOWN_02_00002.png',
+        'jump_DOWN_02_00003.png',
+        'jump_DOWN_02_00004.png',
+        'jump_DOWN_02_00005.png',
+        'jump_DOWN_02_00006.png',
+        'jump_DOWN_02_00007.png',
+        'jump_DOWN_02_00008.png',
+        'jump_DOWN_02_00009.png',
+        'jump_DOWN_02_00010.png',
+        'jump_DOWN_02_00011.png',
+        'jump_DOWN_02_00012.png',
+        'jump_DOWN_02_00013.png',
+        'jump_DOWN_02_00014.png',
+        'jump_DOWN_02_00015.png',
+        'jump_DOWN_02_00016.png',
+        'jump_DOWN_02_00017.png',
+        'jump_DOWN_02_00018.png',
+        'jump_DOWN_02_00019.png',
+        'jump_DOWN_02_00020.png',
+        'jump_DOWN_02_00021.png',
+        'jump_DOWN_02_00022.png',
+        'jump_DOWN_02_00023.png',
+        'jump_DOWN_02_00024.png',
+        'jump_DOWN_02_00025.png',
+        'jump_DOWN_02_00026.png',
+        'jump_DOWN_02_00027.png',
+        'jump_DOWN_02_00028.png',
+        'jump_DOWN_02_00029.png',
+        'jump_DOWN_02_00030.png',
+        'jump_DOWN_02_00031.png',
+        'jump_DOWN_02_00032.png',
+        'jump_DOWN_02_00033.png',
+        'jump_DOWN_02_00034.png',
+        'jump_DOWN_02_00035.png',
+        'jump_DOWN_02_00036.png',
+        'jump_DOWN_02_00037.png',
+        'jump_DOWN_02_00038.png',
+        'jump_DOWN_02_00039.png',
+        'jump_DOWN_02_00040.png',
+        'jump_DOWN_02_00041.png',
+        'jump_DOWN_02_00042.png',
+        'jump_DOWN_02_00043.png',
+        'jump_DOWN_02_00044.png',
+        'jump_DOWN_02_00045.png',
+        'jump_DOWN_02_00046.png',
+        'jump_DOWN_02_00047.png',
+      ], 24, false, false);
+
+      sprite.animations.add('falling', ['jump_DOWN_02_00030.png'], 24, true, false);
+
+      sprite.animations.play('walk');
+        if(ldata.team != that.myTeam) {
             sprite.scale.y *= -1;
             sprite.anchor.setTo(0,1);
             //data.x = game.width - 11;
             ldata.y = game.height - 10;
           }
-          var guy = new GoodGuy(sprite, ldata);
-          that.allEntities.push(guy);
-          console.log("createGoodGuy", data);
+      var guy = new GoodGuy(sprite, data);
+
+      that.allEntities.push(guy);
+      console.log("createGoodGuy", data);
         }
       }
     }, 150);
@@ -171,20 +303,49 @@ module.exports = class Game {
   update () {
 
     for (var i = this.allEntities.length - 1; i >= 0; i--) {
-      if(this.allEntities[i].team != this.myTeam) {
-        this.allEntities[i].updateUpsideDown(this.gridState);
-      }
-      else {
-        this.allEntities[i].update(this.gridState);
-      }
+      this.allEntities[i].update(this.gridState);
     }
 
     for (var i = this.allBoxes.length - 1; i >= 0; i--) {
-      if(this.allBoxes[i].team != this.myTeam) {
-        this.updateBlocksUpsideDown(this.allBoxes[i]);
+      this.allBoxes[i].accel += GRAVITY;
+      this.allBoxes[i].y += this.time.physicsElapsed * this.allBoxes[i].accel;
+
+      if(this.allBoxes[i].y + GRID_SIZE_PX >= this.height) {
+        this.allBoxes[i].y = this.height - GRID_SIZE_PX;
+        this.allBoxes[i].accel = 0;
+        if(this.allBoxes[i].antiblock) {
+          this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
+          continue;
+        }
       }
-      else {
-        this.updateBlocks(this.allBoxes[i]);
+
+      var nextRow = Math.ceil(this.allBoxes[i].y / GRID_SIZE_PX),
+          curRow = Math.floor(this.allBoxes[i].y / GRID_SIZE_PX);
+
+      if(nextRow != this.allBoxes[i].row) {
+        var targetRow = this.gridState[nextRow] || this.gridState[curRow];
+        if(targetRow[this.allBoxes[i].col] == 0) {
+          this.gridState[this.allBoxes[i].row][this.allBoxes[i].col] = 0;
+          this.gridState[nextRow][this.allBoxes[i].col] = this.allBoxes[i];
+          this.allBoxes[i].row = nextRow;
+        }
+        else {
+          if(this.allBoxes[i].antiblock) {
+            this.blockDestroyer.addToRemoveList(targetRow[this.allBoxes[i].col]);
+            this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
+          }
+          else {
+            this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
+            this.allBoxes[i].accel = 0;
+
+            // // animate bounce
+            // game.add.tween(this.allBoxes[i]).from( {
+            //   y: "-10",
+            //   alpha: 0
+            // }, 1000, Phaser.Easing.Bounce.Out, true);
+
+          }
+        }
       }
     }
     this.blockDestroyer.removeBlocks();
@@ -196,78 +357,6 @@ module.exports = class Game {
        line.push(this.toolLine[i].MESSAGE);
     }
     game.debug.text("Tools:" + line.toString(), 0, 55, 'rgb(255,255,0)');
-  }
-
-  updateBlocks(block) {
-    block.accel += GRAVITY;
-    block.y += this.time.physicsElapsed * block.accel;
-
-    if(block.y + GRID_SIZE_PX >= this.height) {
-      block.y = this.height - GRID_SIZE_PX;
-      block.accel = 0;
-      if(block.antiblock) {
-        this.blockDestroyer.addToRemoveList(block);
-        return;
-      }
-    }
-
-    var nextRow = Math.ceil(block.y / GRID_SIZE_PX),
-        curRow = Math.floor(block.y / GRID_SIZE_PX);
-
-    if(nextRow != block.row) {
-      var targetRow = this.gridState[nextRow] || this.gridState[curRow];
-      if(targetRow[block.col] == 0) {
-        this.gridState[block.row][block.col] = 0;
-        this.gridState[nextRow][block.col] = block;
-        block.row = nextRow;
-      }
-      else {
-        if(block.antiblock) {
-          this.blockDestroyer.addToRemoveList(targetRow[block.col]);
-          this.blockDestroyer.addToRemoveList(block);
-        }
-        else {
-          block.y = block.row * GRID_SIZE_PX;
-          block.accel = 0;
-        }
-      }
-    }
-  }
-
-  updateBlocksUpsideDown(block) {
-    block.accel += GRAVITY;
-    block.y -= this.time.physicsElapsed * block.accel;
-
-    if(block.y < 0) {
-      block.y = 0;
-      block.accel = 0;
-      if(block.antiblock) {
-        this.blockDestroyer.addToRemoveList(block);
-        return;
-      }
-    }
-
-    var nextRow = Math.floor(block.y / GRID_SIZE_PX),
-        curRow = Math.ceil(block.y / GRID_SIZE_PX);
-
-    if(nextRow != block.row) {
-      var targetRow = this.gridState[nextRow] || this.gridState[curRow];
-      if(targetRow[block.col] == 0) {
-        this.gridState[block.row][block.col] = 0;
-        this.gridState[nextRow][block.col] = block;
-        block.row = nextRow;
-      }
-      else {
-        if(block.antiblock) {
-          this.blockDestroyer.addToRemoveList(targetRow[block.col]);
-          this.blockDestroyer.addToRemoveList(block);
-        }
-        else {
-          block.y = block.row * GRID_SIZE_PX;
-          block.accel = 0;
-        }
-      }
-    }
   }
 
 }
