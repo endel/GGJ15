@@ -27,6 +27,7 @@ module.exports = class Preloader {
     this.load.image('block_paper', 'assets/images/elementos_02c 85px.png');
     this.load.image('block_car', 'assets/images/elementos_03c 85px.png');
     this.load.image('block_toilet', 'assets/images/elementos_04a 85px.png');
+    this.load.image('block_bomb', 'assets/images/elementos_bomba01 85px.png');
 
     // texture packer atlases
     game.load.atlasJSONHash('good_guy', 'assets/images/good_guy.png', 'assets/images/good_guy.json');

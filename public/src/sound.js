@@ -7,7 +7,6 @@ module.exports = class Sound {
       'block-block_paper': game.add.audio('audio-block-paper'),
       'block-block_car': game.add.audio('audio-block-metal'),
       'block-block_toilet': game.add.audio('audio-block-undefined'),
-      'block-block_trash': game.add.audio('audio-block'),
 
       'guy-fall': game.add.audio('audio-guy-fall'),
       'guy-jump': game.add.audio('audio-guy-jump'),
