@@ -6,6 +6,8 @@ var STATE = {
   TURNING: 4,
 }
 
+var musicLevel = 0, levelToGetTense = 4;
+
 module.exports = class GoodGuy {
 
   constructor(sprite, data) {
@@ -105,8 +107,11 @@ module.exports = class GoodGuy {
     this.col = Math.floor(this.sprite.x / GRID_SIZE_PX);
     this.row = Math.floor(this.sprite.y / GRID_SIZE_PX);
 
-    var nextCol = Math.ceil(this.sprite.x / GRID_SIZE_PX);
-    var nextRow = Math.ceil(this.sprite.y / GRID_SIZE_PX);
+    var vel = game.time.physicsElapsed * this.acceleration * direction;
+    // var vel = 0;
+
+    var nextCol = Math.ceil((this.sprite.x + vel) / GRID_SIZE_PX);
+    var nextRow = Math.ceil((this.sprite.y) / GRID_SIZE_PX);
 
     // set as FALLING when ground is empty
     if (this.state != STATE.CLIMBING && this.state != STATE.CLIMBING_DOWN &&
@@ -132,6 +137,12 @@ module.exports = class GoodGuy {
     } else if (this.state == STATE.WALKING) {
       var willInvertDirection = false;
 
+      if (musicLevel == 0 && GRID_WIDTH - this.row > levelToGetTense) {
+        musicLevel = 1;
+        Sound.get('music-ambient').stop()
+        Sound.get('music-tense').play()
+      }
+
       if (typeof(gridState[this.row][this.col + this.direction]) !== "undefined") {
         this.sprite.x += game.time.physicsElapsed * this.acceleration * direction;
       } else {
@@ -141,7 +152,6 @@ module.exports = class GoodGuy {
       // fix direction for checking gridState
       if (direction == -1) direction = 0;
 
-      console.log(gridState[this.row][this.col + direction]);
       if (typeof(gridState[this.row][this.col + direction]) !== "undefined" &&
           gridState[this.row][this.col + direction] != 0 &&
           gridState[this.row][this.col + direction].accel == 0) {
@@ -174,17 +184,17 @@ module.exports = class GoodGuy {
           this.sprite.y += 10 * this.spriteScale;
           this.sprite.x += 36 * ((this.direction) ? 1 : -1.7) * this.spriteScale;
 
-        // } else if (gridState[this.row + 2] && gridState[this.row + 2][this.col + direction] == 0) {
-        //   console.log("invert")
-        //   willInvertDirection = true;
+        } else if (gridState[this.row + 2] && gridState[this.row + 2][this.col + direction] == 0) {
+          console.log("invert")
+          willInvertDirection = true;
         }
       }
 
       if (willInvertDirection) {
         this.state = STATE.TURNING;
       }
-
     }
+
 
   }
 

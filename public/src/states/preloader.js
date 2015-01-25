@@ -44,19 +44,24 @@ module.exports = class Preloader {
     this.load.image('cursor-sub', 'assets/images/cursor_delete01.png');
 
     // audio
+    this.load.audio('music-ambient', 'assets/audio/trilha/nivel1_ambiencia.mp3');
+    this.load.audio('music-tense', 'assets/audio/trilha/nivel2_trilha.mp3');
+
     this.load.audio('audio-block', 'assets/audio/sons/create_block/create_block.mp3');
     this.load.audio('audio-block-remove', 'assets/audio/sons/remove/remove_block.mp3');
     this.load.audio('audio-block-undefined', 'assets/audio/sons/blocks/block_indefinido.mp3');
     this.load.audio('audio-block-metal', 'assets/audio/sons/blocks/block_metal.mp3');
     this.load.audio('audio-block-paper', 'assets/audio/sons/blocks/block_paper.mp3');
     this.load.audio('audio-bomb', 'assets/audio/sons/bomb/create_bomb.mp3');
-    this.load.audio('audio-bomb-explode', 'assets/audio/sons/bomb/exposion_bomb.mp3');
+    this.load.audio('audio-bomb-explode', 'assets/audio/sons/bomb/explosion_bomb.mp3');
     this.load.audio('audio-guy-walking', 'assets/audio/sons/steps/steps.mp3');
     this.load.audio('audio-guy-fall', 'assets/audio/sons/fall/fall.mp3');
     this.load.audio('audio-guy-jump', 'assets/audio/sons/jump/jump.mp3');
   }
 
   create() {
+    Sound.get('music-ambient').play()
+
     // Once the load has finished we disable the crop because we're going to sit in the update loop for a short while as the music decodes
     this.preloadBar.cropEnabled = false;
   }
