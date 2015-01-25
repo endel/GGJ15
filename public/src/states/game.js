@@ -316,6 +316,7 @@ module.exports = class Game {
 
         if(this.allBoxes[i].antiblock) {
           this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
+          Sound.get('block-remove').play()
           continue;
         }
       }

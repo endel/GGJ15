@@ -59,6 +59,7 @@ module.exports = class GoodGuy {
 
     } else if (state == STATE.FALLING) {
       this.sprite.play('falling');
+      this.audioWalking.stop();
 
     } else if (state == STATE.CLIMBING) {
       this.sprite.play('jump');
