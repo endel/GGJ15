@@ -1,4 +1,5 @@
 var MESSAGE = "add_block";
+var audios = null;
 
 class BlockCreator {
 
@@ -27,6 +28,10 @@ class BlockCreator {
       var posy = row * GRID_SIZE_PX;
       var spriteId = Math.floor(Math.random()*this.block_sprites.length);
       var box = _game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
+
+      // play respective audio
+      Sound.get("block-" + this.block_sprites[spriteId]).play();
+
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;
       _game.gridState[row][col] = box;

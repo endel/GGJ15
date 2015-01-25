@@ -37,7 +37,6 @@ module.exports = class Game {
 
       onGameStart: function(data) {
         console.log("onGameStart", data)
-        that.createGoodGuy({x: 11, y: 10});
       },
 
       onGameEnd: function(data) {
@@ -108,6 +107,8 @@ module.exports = class Game {
 
     this.refillToolLine();
 
+    that.createGoodGuy({x: 11, y: 10});
+
     /*this.graphics.lineStyle(2, 0xFFFFFF);
     for (var i = 0; i <= GRID_WIDTH; i++) {
       this.graphics.moveTo(i*GRID_SIZE_PX, 0);
@@ -125,8 +126,6 @@ module.exports = class Game {
       that.objects = that.objects || that.add.group();
       that.objects.z = 1;
       var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
-
-      console.log("Create");
 
       sprite.animations.add('walk', [
         'walk_cycle_00000.png',
@@ -201,6 +200,59 @@ module.exports = class Game {
         'jump_UP_01_00046.png',
         'jump_UP_01_00047.png',
       ], 24, false, false);
+
+      sprite.animations.add('jump_down', [
+        'jump_DOWN_02_00000.png',
+        'jump_DOWN_02_00001.png',
+        'jump_DOWN_02_00002.png',
+        'jump_DOWN_02_00003.png',
+        'jump_DOWN_02_00004.png',
+        'jump_DOWN_02_00005.png',
+        'jump_DOWN_02_00006.png',
+        'jump_DOWN_02_00007.png',
+        'jump_DOWN_02_00008.png',
+        'jump_DOWN_02_00009.png',
+        'jump_DOWN_02_00010.png',
+        'jump_DOWN_02_00011.png',
+        'jump_DOWN_02_00012.png',
+        'jump_DOWN_02_00013.png',
+        'jump_DOWN_02_00014.png',
+        'jump_DOWN_02_00015.png',
+        'jump_DOWN_02_00016.png',
+        'jump_DOWN_02_00017.png',
+        'jump_DOWN_02_00018.png',
+        'jump_DOWN_02_00019.png',
+        'jump_DOWN_02_00020.png',
+        'jump_DOWN_02_00021.png',
+        'jump_DOWN_02_00022.png',
+        'jump_DOWN_02_00023.png',
+        'jump_DOWN_02_00024.png',
+        'jump_DOWN_02_00025.png',
+        'jump_DOWN_02_00026.png',
+        'jump_DOWN_02_00027.png',
+        'jump_DOWN_02_00028.png',
+        'jump_DOWN_02_00029.png',
+        'jump_DOWN_02_00030.png',
+        'jump_DOWN_02_00031.png',
+        'jump_DOWN_02_00032.png',
+        'jump_DOWN_02_00033.png',
+        'jump_DOWN_02_00034.png',
+        'jump_DOWN_02_00035.png',
+        'jump_DOWN_02_00036.png',
+        'jump_DOWN_02_00037.png',
+        'jump_DOWN_02_00038.png',
+        'jump_DOWN_02_00039.png',
+        'jump_DOWN_02_00040.png',
+        'jump_DOWN_02_00041.png',
+        'jump_DOWN_02_00042.png',
+        'jump_DOWN_02_00043.png',
+        'jump_DOWN_02_00044.png',
+        'jump_DOWN_02_00045.png',
+        'jump_DOWN_02_00046.png',
+        'jump_DOWN_02_00047.png',
+      ], 24, false, false);
+
+      sprite.animations.add('falling', ['jump_DOWN_02_00030.png'], 24, true, false);
 
       sprite.animations.play('walk');
 

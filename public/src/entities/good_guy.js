@@ -1,7 +1,8 @@
 var STATE = {
   FALLING: 0,
   WALKING: 1,
-  CLIMBING: 2
+  CLIMBING: 2,
+  CLIMBING_DOWN: 3,
 }
 
 module.exports = class GoodGuy {
@@ -21,6 +22,10 @@ module.exports = class GoodGuy {
     sprite.x = posx;
     sprite.y = posy;
 
+    this.audioWalking = Sound.get('guy-walking');
+    this.audioJump = Sound.get('guy-jump');
+    this.audioJumpDown = Sound.get('guy-fall');
+
     var oldWidth = this.sprite.width,
         oldHeight = this.sprite.height;
     this.sprite.height = GRID_SIZE_PX;
@@ -39,6 +44,7 @@ module.exports = class GoodGuy {
 
     //
     this.state = STATE.FALLING;
+    this.sprite.play('falling');
     this.targetClimbingRow = null;
     this.targetClimbingCol = null;
   }
@@ -53,9 +59,10 @@ module.exports = class GoodGuy {
     var nextRow = Math.ceil(this.sprite.y / GRID_SIZE_PX);
 
     // set as FALLING when ground is empty
-    if (this.state != STATE.CLIMBING &&
+    if (this.state != STATE.CLIMBING && this.state != STATE.CLIMBING_DOWN &&
         gridState[this.row + 1] && gridState[this.row + 1][(direction > 0 ? this.col : nextCol)] == 0) {
       this.state = STATE.FALLING;
+      this.sprite.play('falling');
     }
 
     if (this.state == STATE.FALLING) {
@@ -74,38 +81,74 @@ module.exports = class GoodGuy {
       }
 
     } else if (this.state == STATE.WALKING) {
+      this.sprite.play('walk');
+      if (!this.audioWalking.isPlaying) {
+        this.audioWalking.play();
+      }
+
+      var willInvertDirection = false;
 
       this.sprite.x += game.time.physicsElapsed * this.acceleration * direction;
 
       // fix direction for checking gridState
       if (direction == -1) direction = 0;
 
-      if (gridState[this.row][this.col + direction] != 0 && gridState[this.row][this.col + direction].accel == 0) {
+      if (typeof(gridState[this.row][this.col + direction]) !== "undefined" &&
+          gridState[this.row][this.col + direction] != 0 &&
+          gridState[this.row][this.col + direction].accel == 0) {
+
+        // CLIMBING UP?
         if (gridState[this.row - 1][this.col + direction] == 0) {
           this.targetClimbingRow = this.row - 1;
           this.targetClimbingCol = this.col + direction;
 
-          this.state = STATE.CLIMBING;
+          this.state = STATE.CLIMBING_DOWN;
           this.sprite.play('jump');
+          this.audioJump.play();
+
           this.sprite.y -= 84 * this.spriteScale;
           this.sprite.x += 36 * ((this.direction) ? 1 : -1.7) * this.spriteScale;
 
         } else {
-          // Can't climb, invert direction
-          this.sprite.scale.x *= -1;
+          willInvertDirection = true;
+        }
 
-          // fix anchor for inverted direction
-          if (this.sprite.scale.x < 0) {
-            this.sprite.anchor.setTo(1, 0);
-          } else {
-            this.sprite.anchor.setTo(0, 0);
-          }
+      } else if (typeof(gridState[this.row][this.col + direction]) !== "undefined" &&
+          gridState[this.row][this.col + direction] == 0 &&
+          gridState[this.row + 1]) {
 
-          this.direction = !this.direction;
+        // CLIMBING DOWN?
+        console.log(gridState[this.row + 1][this.col + direction]);
+        if (gridState[this.row + 1][this.col + direction] == 0) {
+          this.targetClimbingRow = this.row + 1;
+          this.targetClimbingCol = this.col + direction;
+
+          this.state = STATE.CLIMBING;
+          this.sprite.play('jump_down');
+          this.audioJumpDown.play();
+          this.sprite.y += 10 * this.spriteScale;
+          this.sprite.x += 36 * ((this.direction) ? 1 : -1.7) * this.spriteScale;
+
+        } else {
+          willInvertDirection = true;
         }
       }
 
-    } else if (this.state == STATE.CLIMBING) {
+      if (willInvertDirection) {
+        // Can't climb, invert direction
+        this.sprite.scale.x *= -1;
+
+        // fix anchor for inverted direction
+        if (this.sprite.scale.x < 0) {
+          this.sprite.anchor.setTo(1, 0);
+        } else {
+          this.sprite.anchor.setTo(0, 0);
+        }
+
+        this.direction = !this.direction;
+      }
+
+    } else if (this.state == STATE.CLIMBING || this.state == STATE.CLIMBING_DOWN) {
       // 136x170
       // 100x100
       // this.sprite.x += 36 * this.spriteScale;

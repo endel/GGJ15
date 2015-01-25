@@ -35,7 +35,18 @@ module.exports = class Preloader {
     this.load.image('skyline', 'assets/background/SkylineNoise.png');
     this.load.image('wires', 'assets/background/Fios_foreground.png');
     this.load.image('grid', 'assets/background/GRID_01.png');
-    this.load.audio('music-background', 'assets/sound/sample_song.mp3');
+
+    // audio
+    this.load.audio('audio-block', 'assets/audio/sons/create_block/create_block.mp3');
+    this.load.audio('audio-block-remove', 'assets/audio/sons/remove/remove_block.mp3');
+    this.load.audio('audio-block-undefined', 'assets/audio/sons/blocks/block_indefined.mp3');
+    this.load.audio('audio-block-metal', 'assets/audio/sons/blocks/block_metal.mp3');
+    this.load.audio('audio-block-paper', 'assets/audio/sons/blocks/block_paper.mp3');
+    this.load.audio('audio-bomb', 'assets/audio/sons/bomb/create_bomb.mp3');
+    this.load.audio('audio-bomb-explode', 'assets/audio/sons/bomb/exposion_bomb.mp3');
+    this.load.audio('audio-guy-walking', 'assets/audio/sons/steps/steps.mp3');
+    this.load.audio('audio-guy-fall', 'assets/audio/sons/fall/fall.mp3');
+    this.load.audio('audio-guy-jump', 'assets/audio/sons/jump/jump.mp3');
   }
 
   create() {

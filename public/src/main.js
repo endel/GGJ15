@@ -5,6 +5,8 @@ var Boot = require('./states/boot'),
     Game = require('./states/game'),
     EndGame = require('./states/end_game');
 
+window.Sound = require('./sound');
+
 window.GRID_WIDTH = 20;
 window.GRID_HEIGHT = 20;
 window.GRID_SIZE_PX = 40;
