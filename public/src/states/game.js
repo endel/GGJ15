@@ -314,7 +314,7 @@ module.exports = class Game {
           sprite.animations.play('walk');
           var guy = new GoodGuy(sprite, data);
 
-          that.allEntities.push(guy);
+          ldata.array.push(guy);
           console.log("createGoodGuy", data);
         }
       }
