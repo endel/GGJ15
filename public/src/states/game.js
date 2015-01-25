@@ -286,11 +286,12 @@ module.exports = class Game {
 
     for (var i = this.allBoxes.length - 1; i >= 0; i--) {
       this.allBoxes[i].accel += GRAVITY;
-      this.allBoxes[i].y += this.time.physicsElapsed * this.allBoxes[i].accel;
+      this.allBoxes[i].y += this.time.physicsElapsed * this.allBoxes[i].accel * GRAVITY;
 
       if(this.allBoxes[i].y + GRID_SIZE_PX >= this.height) {
         this.allBoxes[i].y = this.height - GRID_SIZE_PX;
         this.allBoxes[i].accel = 0;
+
         if(this.allBoxes[i].antiblock) {
           this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
           continue;
@@ -313,7 +314,12 @@ module.exports = class Game {
             this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
           }
           else {
+
+            // play sound when it hits the ground.
             this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
+            if (this.allBoxes[i].audio && this.allBoxes[i].accel > GRAVITY) {
+              this.allBoxes[i].audio.play();
+            }
             this.allBoxes[i].accel = 0;
 
             // // animate bounce

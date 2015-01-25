@@ -29,8 +29,8 @@ class BlockCreator {
       var spriteId = Math.floor(Math.random()*this.block_sprites.length);
       var box = _game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
 
-      // play respective audio
-      Sound.get("block-" + this.block_sprites[spriteId]).play();
+      box.audio = Sound.get("block-" + this.block_sprites[spriteId]) || Sound.get("block-undefined");
+      Sound.get("block").play();
 
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;
@@ -44,7 +44,7 @@ class BlockCreator {
 
       game.add.tween(box).from( {
         angle: -20,
-        x: "-2",
+        x: "-5",
         y: "-2",
         alpha: 0
       }, 1000, Phaser.Easing.Cubic.Out, true);
