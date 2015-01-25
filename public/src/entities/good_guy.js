@@ -21,7 +21,7 @@ module.exports = class GoodGuy {
     sprite.x = posx;
     sprite.y = posy;
 
-    this.sprite.width = GRID_SIZE_PX;
+    this.sprite.width = 6;//GRID_SIZE_PX;
     this.sprite.height = GRID_SIZE_PX;
 
     //

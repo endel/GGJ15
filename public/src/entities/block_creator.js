@@ -6,7 +6,7 @@ class BlockCreator {
     this.icon = "something";
     this.game = _game;
     this.MESSAGE = MESSAGE;
-    this.block_sprites = ['block_paper', 'block_car', 'block_toilet'];
+    this.block_sprites = ['block_paper', 'block_car', 'block_toilet', 'block_trash'];
   }
 
   isValid(x,y) {
@@ -26,7 +26,7 @@ class BlockCreator {
       var posx = col * GRID_SIZE_PX;
       var posy = row * GRID_SIZE_PX;
       var spriteId = Math.floor(Math.random()*this.block_sprites.length);
-      var box = _game.add.sprite(posx, posy, this.block_sprites[spriteId]);
+      var box = _game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;
       _game.gridState[row][col] = box;
@@ -34,9 +34,9 @@ class BlockCreator {
       box.col = col;
       box.row = row;
       box.antiblock = false;
+      box.isBlock = true;
       _game.allBoxes.push(box);
     }
-    console.log("createBox");
   }
 
 }

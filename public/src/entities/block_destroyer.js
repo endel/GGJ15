@@ -11,7 +11,7 @@ class BlockDestroyer {
 
   isValid(row,col) {
     if(this.game) {
-      if(this.game.gridState[row][col] == 0) {
+      if(this.game.gridState[row][col].isBlock) {
         return true;
       }
     }
@@ -33,6 +33,7 @@ class BlockDestroyer {
       box.col = col;
       box.row = row;
       box.antiblock = true;
+      _game.objects.add(box);
       _game.allBoxes.push(box);
     }
   }
@@ -52,6 +53,23 @@ class BlockDestroyer {
           _game.allBoxes.splice(index, 1);
           block.destroy();
         }
+      }
+    }
+  }
+
+  destroyBlock(data) {
+    if (this.game) {
+      var _game = this.game;
+      var col = data.col;
+      var row = data.row;
+      var box = _game.gridState[row][col];
+      if(box){
+        var index = _game.allBoxes.indexOf(box);
+        if(index > -1){
+          _game.allBoxes.splice(index, 1);
+        }
+        _game.gridState[row][col] = 0;
+        box.destroy();
       }
     }
   }

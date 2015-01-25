@@ -52,7 +52,8 @@ module.exports = class Game {
 
       onBlockRemoved: function(data) {
         console.log("onBlockRemoved", data);
-        that.blockDestroyer.createAntiBlock(data);
+        //that.blockDestroyer.createAntiBlock(data);
+        that.blockDestroyer.destroyBlock(data);
       }
     });
   }
@@ -60,6 +61,24 @@ module.exports = class Game {
   create() {
     var that = this;
     this.connect();
+
+    this.backgroud = this.add.group();
+    this.backgroud.z = 0;
+    this.objects = this.objects || this.add.group();
+    this.objects.z = 1;
+    this.foregroud = this.add.group();
+    this.foregroud.z = 2;
+
+    //*** Back and foreground ***
+    this.sky = this.add.sprite(0, 0, 'sky', this.backgroud);
+    this.sky.width = game.width;
+    this.sky.height = game.height;
+    this.wires = this.add.sprite(0, 0, 'wires', this.foregroud);
+    this.wires.width = game.width;
+    this.wires.height = game.height;
+    this.grid = this.add.sprite(0, 0, 'grid', this.foregroud);
+    this.grid.width = game.width;
+    this.grid.height = game.height;
 
     // Clean up grid with zeros
     for (var i = GRID_WIDTH - 1; i >= 0; i--) {
@@ -89,7 +108,7 @@ module.exports = class Game {
 
     this.refillToolLine();
 
-    this.graphics.lineStyle(2, 0xFFFFFF);
+    /*this.graphics.lineStyle(2, 0xFFFFFF);
     for (var i = 0; i <= GRID_WIDTH; i++) {
       this.graphics.moveTo(i*GRID_SIZE_PX, 0);
       this.graphics.lineTo(i*GRID_SIZE_PX, GRID_SIZE_PX*GRID_HEIGHT);
@@ -97,13 +116,21 @@ module.exports = class Game {
     for (var j = 0; j <= GRID_HEIGHT; j++) {
       this.graphics.moveTo(0, j*GRID_SIZE_PX);
       this.graphics.lineTo(GRID_SIZE_PX*GRID_WIDTH, j*GRID_SIZE_PX);
-    }
+    }*/
   }
 
   createGoodGuy(data) {
-    var sprite = this.add.sprite(0, 0, 'good_guy');
-    var guy = new GoodGuy(sprite, data);
-    this.allEntities.push(guy);
+    var that = this;
+    setTimeout(function(){
+      that.objects = that.objects || that.add.group();
+      that.objects.z = 1;
+      var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
+      sprite.z = 100;
+      var guy = new GoodGuy(sprite, data);
+      that.allEntities.push(guy);
+      console.log("createGoodGuy", data);
+    }, 150);
+
   }
 
   createBadGuy(data) {
