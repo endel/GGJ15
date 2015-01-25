@@ -22,10 +22,18 @@ class BlockCreator {
   createBlock(data) {
     if (this.game) {
       var _game = this.game;
+      for (var i in _game.teams) {
+        for (var j = 0; j < _game.teams[i].length; j++) {
+          if(_game.teams[i][j] == data.socket_id) {
+            data.team = i;
+          }
+        }
+      }
       var col = data.col;
-      var row = data.row;
+      var row = _game.myTeam != data.team ? GRID_HEIGHT - data.row - 1 : data.row;
       var posx = col * GRID_SIZE_PX;
       var posy = row * GRID_SIZE_PX;
+
       var spriteId = Math.floor(Math.random()*this.block_sprites.length);
       var box = _game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
 
@@ -40,6 +48,8 @@ class BlockCreator {
       box.row = row;
       box.antiblock = false;
       box.isBlock = true;
+      box.team = data.team;
+      ///////// TODO: Criar uma lista separada para blocos do time adversário
       _game.allBoxes.push(box);
 
       game.add.tween(box).from( {

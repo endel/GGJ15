@@ -2,6 +2,7 @@ var realtime = require('../realtime');
 var BlockCreator = require('../entities/block_creator')
 var BlockDestroyer = require('../entities/block_destroyer')
 var GoodGuy = require('../entities/good_guy')
+var _ = require('lodash');
 //console.log("Realtime: ", realtime);
 
 module.exports = class Game {
@@ -36,7 +37,33 @@ module.exports = class Game {
       },
 
       onGameStart: function(data) {
-        console.log("onGameStart", data)
+        console.log("onGameStart", data);
+        //*******************
+        //*** CLICK EVENT ***
+        //*******************
+        that.input.onDown.add(function() {
+          var tool = that.toolLine[0];
+          var col = Math.floor(that.input.x / GRID_SIZE_PX);
+          var row = Math.floor(that.input.y / GRID_SIZE_PX);
+          if(tool.isValid(row, col)) {
+            socket.emit(tool.MESSAGE, {
+              col: col,
+              row: row
+            });
+            that.toolLine.shift();
+            that.refillToolLine();
+          }
+        }, that);
+        that.myTeam = -1;
+        that.teams = data.teams;
+        for (var i in that.teams) {
+          for (var j = 0; j < that.teams[i].length; j++) {
+            if(that.teams[i][j] == socket.id) {
+              that.myTeam = i;
+            }
+          }
+        }
+        that.createGoodGuy({x: 11, y: 10});
       },
 
       onGameEnd: function(data) {
@@ -88,22 +115,6 @@ module.exports = class Game {
     }
 
     this.graphics = this.add.graphics(0, 0);
-    //*******************
-    //*** CLICK EVENT ***
-    //*******************
-    this.input.onDown.add(function() {
-      var tool = that.toolLine[0];
-      var col = Math.floor(that.input.x / GRID_SIZE_PX);
-      var row = Math.floor(that.input.y / GRID_SIZE_PX);
-      if(tool.isValid(row, col)) {
-        socket.emit(tool.MESSAGE, {
-          col: col,
-          row: row
-        });
-        that.toolLine.shift();
-        that.refillToolLine();
-      }
-    }, this);
 
     this.refillToolLine();
 
@@ -125,7 +136,11 @@ module.exports = class Game {
     setTimeout(function(){
       that.objects = that.objects || that.add.group();
       that.objects.z = 1;
-      var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
+        for (var i in that.teams) {
+        for (var j = 0; j < that.teams[i].length; j++) {
+          var ldata = _.clone(data);
+          ldata.team = i;
+       var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
 
       sprite.animations.add('walk', [
         'walk_cycle_00000.png',
@@ -255,11 +270,18 @@ module.exports = class Game {
       sprite.animations.add('falling', ['jump_DOWN_02_00030.png'], 24, true, false);
 
       sprite.animations.play('walk');
-
-      sprite.z = 100;
+        if(ldata.team != that.myTeam) {
+            sprite.scale.y *= -1;
+            sprite.anchor.setTo(0,1);
+            //data.x = game.width - 11;
+            ldata.y = game.height - 10;
+          }
       var guy = new GoodGuy(sprite, data);
+
       that.allEntities.push(guy);
       console.log("createGoodGuy", data);
+        }
+      }
     }, 150);
 
   }

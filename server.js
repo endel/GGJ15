@@ -64,7 +64,7 @@ io.sockets.on('connection', function(client) {
         }
 
         // send game_start event to clients in this room
-        client.broadcast.to(uniqRoomName).emit('game_start', {
+        io.sockets.in(uniqRoomName).emit('game_start', {
           level: level,
           teams: teams
         });

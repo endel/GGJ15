@@ -21,6 +21,7 @@ module.exports = class GoodGuy {
     var posy = this.col * GRID_SIZE_PX;
     sprite.x = posx;
     sprite.y = posy;
+    this.team = data.team;
 
     this.audioWalking = Sound.get('guy-walking');
     this.audioJump = Sound.get('guy-jump');

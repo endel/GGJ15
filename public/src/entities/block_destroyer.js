@@ -60,8 +60,15 @@ class BlockDestroyer {
   destroyBlock(data) {
     if (this.game) {
       var _game = this.game;
+      for (var i in _game.teams) {
+        for (var j = 0; j < _game.teams[i].length; j++) {
+          if(_game.teams[i][j] == data.socket_id) {
+            data.team = i;
+          }
+        }
+      }
       var col = data.col;
-      var row = data.row;
+      var row = _game.myTeam != data.team ? GRID_HEIGHT - data.row - 1: data.row;
       var box = _game.gridState[row][col];
       if(box){
         var index = _game.allBoxes.indexOf(box);
