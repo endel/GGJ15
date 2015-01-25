@@ -353,9 +353,9 @@ module.exports = class Game {
           curRow = Math.floor(boxArray[i].y / GRID_SIZE_PX);
 
       if(nextRow != boxArray[i].row) {
-        var targetRow = this.gridState[nextRow] || this.gridState[curRow];
+        var targetRow = grid[nextRow] || grid[curRow];
         if(targetRow[boxArray[i].col] == 0) {
-          this.gridState[boxArray[i].row][boxArray[i].col] = 0;
+          grid[boxArray[i].row][boxArray[i].col] = 0;
           grid[nextRow][boxArray[i].col] = boxArray[i];
           boxArray[i].row = nextRow;
         }
