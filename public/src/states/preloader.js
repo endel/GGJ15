@@ -31,6 +31,7 @@ module.exports = class Preloader {
 
     // texture packer atlases
     game.load.atlasJSONHash('good_guy', 'assets/images/good_guy.png', 'assets/images/good_guy.json');
+    game.load.atlasJSONHash('miscelaneous', 'assets/images/miscelaneous.png', 'assets/images/miscelaneous.json');
 
     this.load.image('sky', 'assets/background/Sky_cycle/sky_cycle02_00000.png');
     this.load.image('skyline', 'assets/background/SkylineNoise.png');
