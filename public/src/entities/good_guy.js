@@ -153,9 +153,9 @@ module.exports = class GoodGuy {
           this.sprite.y += 10 * this.spriteScale;
           this.sprite.x += 36 * ((this.direction) ? 1 : -1.7) * this.spriteScale;
 
-        } else if (gridState[this.row + 2] && gridState[this.row + 2][this.col + direction] == 0) {
-          console.log("invert")
-          willInvertDirection = true;
+        // } else if (gridState[this.row + 2] && gridState[this.row + 2][this.col + direction] == 0) {
+        //   console.log("invert")
+        //   willInvertDirection = true;
         }
       }
 
