@@ -40,7 +40,7 @@ module.exports = class Preloader {
     // audio
     this.load.audio('audio-block', 'assets/audio/sons/create_block/create_block.mp3');
     this.load.audio('audio-block-remove', 'assets/audio/sons/remove/remove_block.mp3');
-    this.load.audio('audio-block-undefined', 'assets/audio/sons/blocks/block_indefined.mp3');
+    this.load.audio('audio-block-undefined', 'assets/audio/sons/blocks/block_indefinido.mp3');
     this.load.audio('audio-block-metal', 'assets/audio/sons/blocks/block_metal.mp3');
     this.load.audio('audio-block-paper', 'assets/audio/sons/blocks/block_paper.mp3');
     this.load.audio('audio-bomb', 'assets/audio/sons/bomb/create_bomb.mp3');

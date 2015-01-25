@@ -59,6 +59,9 @@ class BlockDestroyer {
 
   destroyBlock(data) {
     if (this.game) {
+      console.log("destroyBlock", Sound.get('block-remove'));
+      Sound.get('block-remove').play();
+
       var _game = this.game;
       for (var i in _game.teams) {
         for (var j = 0; j < _game.teams[i].length; j++) {
