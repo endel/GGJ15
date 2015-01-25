@@ -32,10 +32,15 @@ module.exports = class Preloader {
     // texture packer atlases
     game.load.atlasJSONHash('good_guy', 'assets/images/good_guy.png', 'assets/images/good_guy.json');
 
-    this.load.image('sky', 'assets/background/Sky_cycle/sky_cycle02_00000.png');
+    this.load_sky();
+
     this.load.image('skyline', 'assets/background/SkylineNoise.png');
     this.load.image('wires', 'assets/background/Fios_foreground.png');
     this.load.image('grid', 'assets/background/GRID_01.png');
+
+    this.load.image('cursor-denied', 'assets/images/CliqueX_01.png');
+    this.load.image('cursor-add', 'assets/images/cursor_add01.png');
+    this.load.image('cursor-sub', 'assets/images/cursor_delete01.png');
 
     // audio
     this.load.audio('audio-block', 'assets/audio/sons/create_block/create_block.mp3');
@@ -74,6 +79,65 @@ module.exports = class Preloader {
     console.log("Goto main menu")
     this.state.start('Game');
 
+  }
+
+  load_sky() {
+    var filenames = [ 'Sky_cycle03_00000.png',
+                      'Sky_cycle03_00001.png',
+                      'Sky_cycle03_00002.png',
+                      'Sky_cycle03_00003.png',
+                      'Sky_cycle03_00004.png',
+                      'Sky_cycle03_00005.png',
+                      'Sky_cycle03_00006.png',
+                      'Sky_cycle03_00007.png',
+                      'Sky_cycle03_00008.png',
+                      'Sky_cycle03_00009.png',
+                      'Sky_cycle03_00010.png',
+                      'Sky_cycle03_00011.png',
+                      'Sky_cycle03_00012.png',
+                      'Sky_cycle03_00013.png',
+                      'Sky_cycle03_00014.png',
+                      'Sky_cycle03_00015.png',
+                      'Sky_cycle03_00016.png',
+                      'Sky_cycle03_00017.png',
+                      'Sky_cycle03_00018.png',
+                      'Sky_cycle03_00019.png',
+                      'Sky_cycle03_00020.png',
+                      'Sky_cycle03_00021.png',
+                      'Sky_cycle03_00022.png',
+                      'Sky_cycle03_00023.png',
+                      'Sky_cycle03_00024.png',
+                      'Sky_cycle03_00025.png',
+                      'Sky_cycle03_00026.png',
+                      'Sky_cycle03_00027.png',
+                      'Sky_cycle03_00028.png',
+                      'Sky_cycle03_00029.png',
+                      'Sky_cycle03_00030.png',
+                      'Sky_cycle03_00031.png',
+                      'Sky_cycle03_00032.png',
+                      'Sky_cycle03_00033.png',
+                      'Sky_cycle03_00034.png',
+                      'Sky_cycle03_00035.png',
+                      'Sky_cycle03_00036.png',
+                      'Sky_cycle03_00037.png',
+                      'Sky_cycle03_00038.png',
+                      'Sky_cycle03_00039.png',
+                      'Sky_cycle03_00040.png',
+                      'Sky_cycle03_00041.png',
+                      'Sky_cycle03_00042.png',
+                      'Sky_cycle03_00043.png',
+                      'Sky_cycle03_00044.png',
+                      'Sky_cycle03_00045.png',
+                      'Sky_cycle03_00046.png',
+                      'Sky_cycle03_00047.png',
+                      'Sky_cycle03_00048.png',
+                      'Sky_cycle03_00049.png' ];
+
+    window.sky_names = [];
+    for (var i = 0; i < filenames.length; i++) {
+      this.load.image("sky"+i, 'assets/background/Sky_cycle/'+filenames[i]);
+      window.sky_names.push("sky"+i);
+    };
   }
 
 }
