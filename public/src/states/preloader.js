@@ -8,8 +8,6 @@ module.exports = class Preloader {
   }
 
   preload() {
-    console.log("Preload...");
-
     // These are the assets we loaded in Boot.js
     // A nice sparkly background and a loading progress bar
     this.preloadBar = this.add.sprite(0, 0, 'preloader-bar');
@@ -20,6 +18,9 @@ module.exports = class Preloader {
     // What that does is automatically crop the sprite from 0 to full-width
     // as the files below are loaded in.
     this.load.setPreloadSprite(this.preloadBar);
+
+    // alert messages
+    this.load.image('message-waiting', 'assets/images/quotes/EnterWait_quote01.png');
 
     // Here we load the rest of the assets our game needs.
     // As this is just a Project Template I've not provided these assets, swap them for your own.

@@ -18,7 +18,6 @@ module.exports = class Game {
     window.allBoxes = this.allBoxes;
     this.allEntities = [];
     this.allTheirEntities = [];
-    this.graphics = null;
 
     this.blockCreator = new BlockCreator(this);
     this.blockDestroyer = new BlockDestroyer(this);
@@ -43,6 +42,11 @@ module.exports = class Game {
 
       onGameStart: function(data) {
         console.log("onGameStart", data);
+
+        // remove "waiting from network" message
+        that.waitingFromNetwork.lifespan = 1500;
+        game.add.tween(that.waitingFromNetwork).to({ alpha: 0}, 500, Phaser.Easing.Cubic.Out, true).delay(1000);
+
         //*******************
         //*** CLICK EVENT ***
         //*******************
@@ -143,12 +147,15 @@ module.exports = class Game {
       }
     }
 
-    this.graphics = this.add.graphics(0, 0);
+    this.waitingFromNetwork = game.add.sprite(0, 0, 'message-waiting');
+    this.waitingFromNetwork.x = game.width / 2 - this.waitingFromNetwork.width / 2;
+    this.waitingFromNetwork.y = game.height / 2 - this.waitingFromNetwork.height / 2;
 
     this.refillToolLine();
 
     //that.createGoodGuy({x: 11, y: 10});
 
+    // this.graphics = this.add.graphics(0, 0);
     /*this.graphics.lineStyle(2, 0xFFFFFF);
     for (var i = 0; i <= GRID_WIDTH; i++) {
       this.graphics.moveTo(i*GRID_SIZE_PX, 0);
