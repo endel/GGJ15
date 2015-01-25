@@ -282,6 +282,33 @@ module.exports = class Game {
             'jump_DOWN_02_00047.png',
           ], 24, false, false);
 
+          sprite.animations.add('turning', [
+            'opposite_walk_rescale_00000.png',
+            'opposite_walk_rescale_00001.png',
+            'opposite_walk_rescale_00002.png',
+            'opposite_walk_rescale_00003.png',
+            'opposite_walk_rescale_00004.png',
+            'opposite_walk_rescale_00005.png',
+            'opposite_walk_rescale_00006.png',
+            'opposite_walk_rescale_00007.png',
+            'opposite_walk_rescale_00008.png',
+            'opposite_walk_rescale_00009.png',
+            'opposite_walk_rescale_00010.png',
+            'opposite_walk_rescale_00011.png',
+            'opposite_walk_rescale_00012.png',
+            'opposite_walk_rescale_00013.png',
+            'opposite_walk_rescale_00014.png',
+            'opposite_walk_rescale_00015.png',
+            'opposite_walk_rescale_00016.png',
+            'opposite_walk_rescale_00017.png',
+            'opposite_walk_rescale_00018.png',
+            'opposite_walk_rescale_00019.png',
+            'opposite_walk_rescale_00020.png',
+            'opposite_walk_rescale_00021.png',
+            'opposite_walk_rescale_00022.png',
+            'opposite_walk_rescale_00023.png'
+          ], 24, false, false);
+
           sprite.animations.add('falling', ['jump_DOWN_02_00030.png'], 24, true, false);
 
           sprite.animations.play('walk');

@@ -3,6 +3,7 @@ var STATE = {
   WALKING: 1,
   CLIMBING: 2,
   CLIMBING_DOWN: 3,
+  TURNING: 4,
 }
 
 module.exports = class GoodGuy {
@@ -71,7 +72,11 @@ module.exports = class GoodGuy {
       this.sprite.play('jump_down');
       this.audioWalking.stop();
       this.audioJumpDown.play();
+
+    } else if (state == STATE.TURNING) {
+      this.sprite.play('turning');
     }
+
   }
 
   get state() {
@@ -155,6 +160,8 @@ module.exports = class GoodGuy {
       }
 
       if (willInvertDirection) {
+        this.state = STATE.TURNING;
+
         // Can't climb, invert direction
         this.sprite.scale.x *= -1;
 
