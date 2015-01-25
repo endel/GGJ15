@@ -125,6 +125,85 @@ module.exports = class Game {
       that.objects = that.objects || that.add.group();
       that.objects.z = 1;
       var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
+
+      console.log("Create");
+
+      sprite.animations.add('walk', [
+        'walk_cycle_00000.png',
+        'walk_cycle_00001.png',
+        'walk_cycle_00002.png',
+        'walk_cycle_00003.png',
+        'walk_cycle_00004.png',
+        'walk_cycle_00005.png',
+        'walk_cycle_00006.png',
+        'walk_cycle_00007.png',
+        'walk_cycle_00008.png',
+        'walk_cycle_00009.png',
+        'walk_cycle_00010.png',
+        'walk_cycle_00011.png',
+        'walk_cycle_00012.png',
+        'walk_cycle_00013.png',
+        'walk_cycle_00014.png',
+        'walk_cycle_00015.png',
+        'walk_cycle_00016.png',
+        'walk_cycle_00017.png',
+        'walk_cycle_00018.png',
+        'walk_cycle_00019.png',
+      ], 24, true, false);
+
+      sprite.animations.add('jump', [
+        'jump_UP_01_00000.png',
+        'jump_UP_01_00001.png',
+        'jump_UP_01_00002.png',
+        'jump_UP_01_00003.png',
+        'jump_UP_01_00004.png',
+        'jump_UP_01_00005.png',
+        'jump_UP_01_00006.png',
+        'jump_UP_01_00007.png',
+        'jump_UP_01_00008.png',
+        'jump_UP_01_00009.png',
+        'jump_UP_01_00010.png',
+        'jump_UP_01_00011.png',
+        'jump_UP_01_00012.png',
+        'jump_UP_01_00013.png',
+        'jump_UP_01_00014.png',
+        'jump_UP_01_00015.png',
+        'jump_UP_01_00016.png',
+        'jump_UP_01_00017.png',
+        'jump_UP_01_00018.png',
+        'jump_UP_01_00019.png',
+        'jump_UP_01_00020.png',
+        'jump_UP_01_00021.png',
+        'jump_UP_01_00022.png',
+        'jump_UP_01_00023.png',
+        'jump_UP_01_00024.png',
+        'jump_UP_01_00025.png',
+        'jump_UP_01_00026.png',
+        'jump_UP_01_00027.png',
+        'jump_UP_01_00028.png',
+        'jump_UP_01_00029.png',
+        'jump_UP_01_00030.png',
+        'jump_UP_01_00031.png',
+        'jump_UP_01_00032.png',
+        'jump_UP_01_00033.png',
+        'jump_UP_01_00034.png',
+        'jump_UP_01_00035.png',
+        'jump_UP_01_00036.png',
+        'jump_UP_01_00037.png',
+        'jump_UP_01_00038.png',
+        'jump_UP_01_00039.png',
+        'jump_UP_01_00040.png',
+        'jump_UP_01_00041.png',
+        'jump_UP_01_00042.png',
+        'jump_UP_01_00043.png',
+        'jump_UP_01_00044.png',
+        'jump_UP_01_00045.png',
+        'jump_UP_01_00046.png',
+        'jump_UP_01_00047.png',
+      ], 24, true, false);
+
+      sprite.animations.play('walk');
+
       sprite.z = 100;
       var guy = new GoodGuy(sprite, data);
       that.allEntities.push(guy);
@@ -184,6 +263,13 @@ module.exports = class Game {
           else {
             this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
             this.allBoxes[i].accel = 0;
+
+            // // animate bounce
+            // game.add.tween(this.allBoxes[i]).from( {
+            //   y: "-10",
+            //   alpha: 0
+            // }, 1000, Phaser.Easing.Bounce.Out, true);
+
           }
         }
       }

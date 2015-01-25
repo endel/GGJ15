@@ -28,6 +28,9 @@ module.exports = class Preloader {
     this.load.image('block_car', 'assets/images/elementos_03c 85px.png');
     this.load.image('block_toilet', 'assets/images/elementos_04a 85px.png');
 
+    // texture packer atlases
+    game.load.atlasJSONHash('good_guy', 'assets/images/good_guy.png', 'assets/images/good_guy.json');
+
     this.load.image('sky', 'assets/background/Sky_cycle/sky_cycle02_00000.png');
     this.load.image('skyline', 'assets/background/SkylineNoise.png');
     this.load.image('wires', 'assets/background/Fios_foreground.png');

@@ -21,8 +21,10 @@ module.exports = class GoodGuy {
     sprite.x = posx;
     sprite.y = posy;
 
-    this.sprite.width = 6; //GRID_SIZE_PX;
+    var oldWidth = this.sprite.width,
+        oldHeight = this.sprite.height;
     this.sprite.height = GRID_SIZE_PX;
+    this.sprite.width = GRID_SIZE_PX / oldHeight * this.sprite.width; //GRID_SIZE_PX;
 
     //
     this.state = STATE.FALLING;
@@ -74,6 +76,15 @@ module.exports = class GoodGuy {
 
         } else {
           // Can't climb, invert direction
+          this.sprite.scale.x *= -1;
+
+          // fix anchor for inverted direction
+          if (this.sprite.scale.x < 0) {
+            this.sprite.anchor.setTo(1, 0);
+          } else {
+            this.sprite.anchor.setTo(0, 0);
+          }
+
           this.direction = !this.direction;
         }
       }
