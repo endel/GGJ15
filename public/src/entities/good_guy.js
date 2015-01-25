@@ -15,7 +15,7 @@ module.exports = class GoodGuy {
     this.direction = true;
 
     this.gravity = GRAVITY;
-    this.acceleration = 10;
+    this.acceleration = 30;
 
     this.row = Math.floor(data.x / GRID_SIZE_PX);
     this.col = Math.floor(data.y / GRID_SIZE_PX);

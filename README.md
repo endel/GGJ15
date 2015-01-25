@@ -1,7 +1,7 @@
 GGJ15
 ===
 
-"Conquer man".
+Just Like Us.
 
 **Dependencies:**
 
