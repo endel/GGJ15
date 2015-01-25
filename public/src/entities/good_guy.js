@@ -106,9 +106,10 @@ module.exports = class GoodGuy {
     this.row = Math.floor(this.sprite.y / GRID_SIZE_PX);
 
     var vel = game.time.physicsElapsed * this.acceleration * direction;
+    // var vel = 0;
 
     var nextCol = Math.ceil((this.sprite.x + vel) / GRID_SIZE_PX);
-    var nextRow = Math.ceil((this.sprite.y + vel) / GRID_SIZE_PX);
+    var nextRow = Math.ceil((this.sprite.y) / GRID_SIZE_PX);
 
     // set as FALLING when ground is empty
     if (this.state != STATE.CLIMBING && this.state != STATE.CLIMBING_DOWN &&
@@ -186,6 +187,7 @@ module.exports = class GoodGuy {
         this.state = STATE.TURNING;
       }
     }
+
 
   }
 
