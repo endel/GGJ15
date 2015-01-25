@@ -5,11 +5,10 @@ var Boot = require('./states/boot'),
     Game = require('./states/game'),
     EndGame = require('./states/end_game');
 
-
 window.GRID_WIDTH = 40;
 window.GRID_HEIGHT = 40;
 window.GRID_SIZE_PX = 20;
-window.GRAVITY = 10;
+window.GRAVITY = 2;
 
 window.game = new Phaser.Game(800, 800, Phaser.AUTO, 'ggj');
 
