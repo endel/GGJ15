@@ -28,6 +28,7 @@ class BlockCreator {
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;
       _game.gridState[row][col] = box;
+      box.accel = 0;
       box.col = col;
       box.row = row;
       _game.allBoxes.push(box);
