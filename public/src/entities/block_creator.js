@@ -41,7 +41,7 @@ class BlockCreator {
       //_game.objects.add(box);
 
       // play respective audio
-      Sound.get("block-" + this.block_sprites[spriteId]).play();
+      (Sound.get("block-" + this.block_sprites[spriteId]) || Sound.get("block-undefined")).play();
 
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;
