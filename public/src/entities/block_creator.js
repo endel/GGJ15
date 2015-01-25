@@ -36,6 +36,13 @@ class BlockCreator {
       box.antiblock = false;
       box.isBlock = true;
       _game.allBoxes.push(box);
+
+      game.add.tween(box).from( {
+        angle: -20,
+        x: "-2",
+        y: "-2",
+        alpha: 0
+      }, 1000, Phaser.Easing.Cubic.Out, true);
     }
   }
 

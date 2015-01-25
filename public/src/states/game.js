@@ -21,7 +21,7 @@ module.exports = class Game {
     this.toolLine = [];
     this.toolLineMax = 3;
 
-    this.currentLevel = window.localStorage.getItem('level') || 0;
+    this.currentLevel = window.localStorage.getItem('level') || 1;
   }
 
   connect() {

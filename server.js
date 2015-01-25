@@ -93,10 +93,12 @@ io.sockets.on('connection', function(client) {
   });
 
   client.on('add_block', function(data) {
+    data.socket_id = client.id;
     io.sockets.in(client.room).emit('block_added', data);
   });
 
   client.on('rem_block', function(data) {
+    data.socket_id = client.id;
     io.sockets.in(client.room).emit('block_removed', data);
   });
 
