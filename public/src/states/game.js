@@ -115,6 +115,9 @@ module.exports = class Game {
 
     //*** Back and foreground ***
     this.create_sky();
+    this.skylineBot = this.backgroud.create(0, 0, 'skyline');
+    this.skylineBot.width = game.width;
+    this.skylineBot.height = game.height;
     this.wires = this.foregroud.create(0, 0, 'wires');
     this.wires.width = game.width;
     this.wires.height = game.height;
@@ -344,7 +347,8 @@ module.exports = class Game {
         this.toolLine.push(this.blockCreator);
       }
       else {
-        this.toolLine.push(this.tools[Math.floor(Math.random()*this.tools.length)]);
+        var rand = Math.floor(Math.random()*this.tools.length*4);
+        this.toolLine.push(this.tools[rand > 0 ? 0 : 1]);
       }
     }
   }
