@@ -2,6 +2,7 @@ var realtime = require('../realtime');
 var BlockCreator = require('../entities/block_creator')
 var BlockDestroyer = require('../entities/block_destroyer')
 var GoodGuy = require('../entities/good_guy')
+var _ = require('lodash');
 //console.log("Realtime: ", realtime);
 
 module.exports = class Game {
@@ -36,7 +37,32 @@ module.exports = class Game {
       },
 
       onGameStart: function(data) {
-        console.log("onGameStart", data)
+        console.log("onGameStart", data);
+        //*******************
+        //*** CLICK EVENT ***
+        //*******************
+        that.input.onDown.add(function() {
+          var tool = that.toolLine[0];
+          var col = Math.floor(that.input.x / GRID_SIZE_PX);
+          var row = Math.floor(that.input.y / GRID_SIZE_PX);
+          if(tool.isValid(row, col)) {
+            socket.emit(tool.MESSAGE, {
+              col: col,
+              row: row
+            });
+            that.toolLine.shift();
+            that.refillToolLine();
+          }
+        }, that);
+        that.myTeam = -1;
+        that.teams = data.teams;
+        for (var i in that.teams) {
+          for (var j = 0; j < that.teams[i].length; j++) {
+            if(that.teams[i][j] == socket.id) {
+              that.myTeam = i;
+            }
+          }
+        }
         that.createGoodGuy({x: 11, y: 10});
       },
 
@@ -89,22 +115,6 @@ module.exports = class Game {
     }
 
     this.graphics = this.add.graphics(0, 0);
-    //*******************
-    //*** CLICK EVENT ***
-    //*******************
-    this.input.onDown.add(function() {
-      var tool = that.toolLine[0];
-      var col = Math.floor(that.input.x / GRID_SIZE_PX);
-      var row = Math.floor(that.input.y / GRID_SIZE_PX);
-      if(tool.isValid(row, col)) {
-        socket.emit(tool.MESSAGE, {
-          col: col,
-          row: row
-        });
-        that.toolLine.shift();
-        that.refillToolLine();
-      }
-    }, this);
 
     this.refillToolLine();
 
@@ -124,11 +134,22 @@ module.exports = class Game {
     setTimeout(function(){
       that.objects = that.objects || that.add.group();
       that.objects.z = 1;
-      var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
-      sprite.z = 100;
-      var guy = new GoodGuy(sprite, data);
-      that.allEntities.push(guy);
-      console.log("createGoodGuy", data);
+        for (var i in that.teams) {
+        for (var j = 0; j < that.teams[i].length; j++) {
+          var ldata = _.clone(data);
+          ldata.team = i;
+          var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
+          if(ldata.team != that.myTeam) {
+            sprite.scale.y *= -1;
+            sprite.anchor.setTo(0,1);
+            //data.x = game.width - 11;
+            ldata.y = game.height - 10;
+          }
+          var guy = new GoodGuy(sprite, ldata);
+          that.allEntities.push(guy);
+          console.log("createGoodGuy", data);
+        }
+      }
     }, 150);
 
   }
@@ -150,42 +171,20 @@ module.exports = class Game {
   update () {
 
     for (var i = this.allEntities.length - 1; i >= 0; i--) {
-      this.allEntities[i].update(this.gridState);
+      if(this.allEntities[i].team != this.myTeam) {
+        this.allEntities[i].updateUpsideDown(this.gridState);
+      }
+      else {
+        this.allEntities[i].update(this.gridState);
+      }
     }
 
     for (var i = this.allBoxes.length - 1; i >= 0; i--) {
-      this.allBoxes[i].accel += GRAVITY;
-      this.allBoxes[i].y += this.time.physicsElapsed * this.allBoxes[i].accel;
-
-      if(this.allBoxes[i].y + GRID_SIZE_PX >= this.height) {
-        this.allBoxes[i].y = this.height - GRID_SIZE_PX;
-        this.allBoxes[i].accel = 0;
-        if(this.allBoxes[i].antiblock) {
-          this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
-          continue;
-        }
+      if(this.allBoxes[i].team != this.myTeam) {
+        this.updateBlocksUpsideDown(this.allBoxes[i]);
       }
-
-      var nextRow = Math.ceil(this.allBoxes[i].y / GRID_SIZE_PX),
-          curRow = Math.floor(this.allBoxes[i].y / GRID_SIZE_PX);
-
-      if(nextRow != this.allBoxes[i].row) {
-        var targetRow = this.gridState[nextRow] || this.gridState[curRow];
-        if(targetRow[this.allBoxes[i].col] == 0) {
-          this.gridState[this.allBoxes[i].row][this.allBoxes[i].col] = 0;
-          this.gridState[nextRow][this.allBoxes[i].col] = this.allBoxes[i];
-          this.allBoxes[i].row = nextRow;
-        }
-        else {
-          if(this.allBoxes[i].antiblock) {
-            this.blockDestroyer.addToRemoveList(targetRow[this.allBoxes[i].col]);
-            this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
-          }
-          else {
-            this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
-            this.allBoxes[i].accel = 0;
-          }
-        }
+      else {
+        this.updateBlocks(this.allBoxes[i]);
       }
     }
     this.blockDestroyer.removeBlocks();
@@ -197,6 +196,78 @@ module.exports = class Game {
        line.push(this.toolLine[i].MESSAGE);
     }
     game.debug.text("Tools:" + line.toString(), 0, 55, 'rgb(255,255,0)');
+  }
+
+  updateBlocks(block) {
+    block.accel += GRAVITY;
+    block.y += this.time.physicsElapsed * block.accel;
+
+    if(block.y + GRID_SIZE_PX >= this.height) {
+      block.y = this.height - GRID_SIZE_PX;
+      block.accel = 0;
+      if(block.antiblock) {
+        this.blockDestroyer.addToRemoveList(block);
+        return;
+      }
+    }
+
+    var nextRow = Math.ceil(block.y / GRID_SIZE_PX),
+        curRow = Math.floor(block.y / GRID_SIZE_PX);
+
+    if(nextRow != block.row) {
+      var targetRow = this.gridState[nextRow] || this.gridState[curRow];
+      if(targetRow[block.col] == 0) {
+        this.gridState[block.row][block.col] = 0;
+        this.gridState[nextRow][block.col] = block;
+        block.row = nextRow;
+      }
+      else {
+        if(block.antiblock) {
+          this.blockDestroyer.addToRemoveList(targetRow[block.col]);
+          this.blockDestroyer.addToRemoveList(block);
+        }
+        else {
+          block.y = block.row * GRID_SIZE_PX;
+          block.accel = 0;
+        }
+      }
+    }
+  }
+
+  updateBlocksUpsideDown(block) {
+    block.accel += GRAVITY;
+    block.y -= this.time.physicsElapsed * block.accel;
+
+    if(block.y < 0) {
+      block.y = 0;
+      block.accel = 0;
+      if(block.antiblock) {
+        this.blockDestroyer.addToRemoveList(block);
+        return;
+      }
+    }
+
+    var nextRow = Math.floor(block.y / GRID_SIZE_PX),
+        curRow = Math.ceil(block.y / GRID_SIZE_PX);
+
+    if(nextRow != block.row) {
+      var targetRow = this.gridState[nextRow] || this.gridState[curRow];
+      if(targetRow[block.col] == 0) {
+        this.gridState[block.row][block.col] = 0;
+        this.gridState[nextRow][block.col] = block;
+        block.row = nextRow;
+      }
+      else {
+        if(block.antiblock) {
+          this.blockDestroyer.addToRemoveList(targetRow[block.col]);
+          this.blockDestroyer.addToRemoveList(block);
+        }
+        else {
+          block.y = block.row * GRID_SIZE_PX;
+          block.accel = 0;
+        }
+      }
+    }
   }
 
 }
