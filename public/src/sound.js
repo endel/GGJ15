@@ -4,6 +4,9 @@ module.exports = class Sound {
 
   constructor() {
     this.sounds = {
+      'music-tense': game.add.audio('music-tense'),
+      'music-ambient': game.add.audio('music-ambient'),
+
       'block-block_paper': game.add.audio('audio-block-paper'),
       'block-block_car': game.add.audio('audio-block-metal'),
       'block-block_toilet': game.add.audio('audio-block-undefined'),

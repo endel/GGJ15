@@ -397,7 +397,7 @@ module.exports = class Game {
 
             // play sound when it hits the ground.
             boxArray[i].y = boxArray[i].row * GRID_SIZE_PX;
-            if (boxArray[i].audio && boxArray[i].accel > GRAVITY) {
+            if (boxArray[i].audio && boxArray[i].accel > GRAVITY * 2) {
               boxArray[i].audio.play();
             }
             boxArray[i].accel = 0;
