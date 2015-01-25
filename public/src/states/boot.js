@@ -25,7 +25,6 @@ module.exports = class Boot {
 
   preload() {
     //  Here we load the assets required for our preloader (in this case a background and a loading bar)
-    this.load.image('preloader-background', 'assets/images/preloader-bg.png');
     this.load.image('preloader-bar', 'assets/images/preloader-progress.png');
   }
 
