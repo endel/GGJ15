@@ -26,38 +26,42 @@ module.exports = class GoodGuy {
 
     //
     this.state = STATE.FALLING;
+    this.targetClimbingRow = null;
+    this.targetClimbingCol = null;
   }
 
   update(gridState) {
+    var direction = (this.direction) ? 1 : -1;
+
     this.col = Math.floor(this.sprite.x / GRID_SIZE_PX);
     this.row = Math.floor(this.sprite.y / GRID_SIZE_PX);
-
-    // set as FALLING when ground is empty
-    if (gridState[this.row + 1] && gridState[this.row + 1][this.col] == 0) {
-      this.state = STATE.FALLING;
-    }
 
     if (this.state == STATE.FALLING) {
       this.gravity += GRAVITY;
       this.sprite.y += game.time.physicsElapsed * this.gravity;
 
-      if(this.sprite.y + GRID_SIZE_PX >= game.height) {
+      var nextRow = Math.ceil(this.sprite.y / GRID_SIZE_PX);
+      if (gridState[nextRow] && gridState[nextRow][this.col] != 0) {
+        this.gravity = 0;
+        this.state = STATE.WALKING;
+
+      } else if (this.sprite.y + GRID_SIZE_PX >= game.height) {
         this.sprite.y = game.height - GRID_SIZE_PX;
         this.gravity = 0;
         this.state = STATE.WALKING;
       }
 
     } else if (this.state == STATE.WALKING) {
-      var direction = (this.direction) ? 1 : -1;
       this.sprite.x += game.time.physicsElapsed * this.acceleration * direction;
 
-      console.log(this.row, this.col + direction, gridState[this.row][this.col + direction])
-
-      window.gridState = gridState;
+      // fix direction for checking gridState
+      if (direction == -1) direction = 0;
 
       if (gridState[this.row][this.col + direction] != 0) {
         if (gridState[this.row - 1][this.col + direction] == 0) {
           this.state = STATE.CLIMBING;
+          this.targetClimbingRow = this.row - 1;
+          this.targetClimbingCol = this.col + ((this.direction) ? 1 : -1);
 
         } else {
           // Can't climb, invert direction
@@ -65,7 +69,19 @@ module.exports = class GoodGuy {
         }
       }
 
+      // set as FALLING when ground is empty
+      if (gridState[this.row + 1] && gridState[this.row + 1][this.col] == 0) {
+        this.state = STATE.FALLING;
+      }
+
     } else if (this.state == STATE.CLIMBING) {
+      this.sprite.y -= game.time.physicsElapsed * this.acceleration;
+      this.sprite.x += game.time.physicsElapsed * (this.acceleration/2) * direction;
+      if (this.row < this.targetClimbingRow) {
+        this.state = STATE.WALKING;
+        this.sprite.y = this.targetClimbingRow * GRID_SIZE_PX;
+        this.sprite.x = this.targetClimbingCol * GRID_SIZE_PX;
+      }
 
     }
 
