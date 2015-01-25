@@ -200,7 +200,7 @@ module.exports = class Game {
         'jump_UP_01_00045.png',
         'jump_UP_01_00046.png',
         'jump_UP_01_00047.png',
-      ], 24, true, false);
+      ], 24, false, false);
 
       sprite.animations.play('walk');
 

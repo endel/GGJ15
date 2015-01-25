@@ -24,7 +24,18 @@ module.exports = class GoodGuy {
     var oldWidth = this.sprite.width,
         oldHeight = this.sprite.height;
     this.sprite.height = GRID_SIZE_PX;
-    this.sprite.width = GRID_SIZE_PX / oldHeight * this.sprite.width; //GRID_SIZE_PX;
+    this.spriteScale = GRID_SIZE_PX / oldHeight
+    this.sprite.width = this.spriteScale * this.sprite.width;
+
+    this.sprite.events.onAnimationComplete.add(function(anim) {
+      // 136x170
+      // 100x100
+      this.state = STATE.WALKING;
+      this.sprite.x = this.targetClimbingCol * GRID_SIZE_PX;
+      this.sprite.y = this.targetClimbingRow * GRID_SIZE_PX; //  - 2
+      console.log('onAnimationComplete', arguments)
+      this.sprite.play('walk');
+    }, this);
 
     //
     this.state = STATE.FALLING;
@@ -42,7 +53,8 @@ module.exports = class GoodGuy {
     var nextRow = Math.ceil(this.sprite.y / GRID_SIZE_PX);
 
     // set as FALLING when ground is empty
-    if (gridState[this.row + 1] && gridState[this.row + 1][(direction > 0 ? this.col : nextCol)] == 0) {
+    if (this.state != STATE.CLIMBING &&
+        gridState[this.row + 1] && gridState[this.row + 1][(direction > 0 ? this.col : nextCol)] == 0) {
       this.state = STATE.FALLING;
     }
 
@@ -68,11 +80,15 @@ module.exports = class GoodGuy {
       // fix direction for checking gridState
       if (direction == -1) direction = 0;
 
-      if (gridState[this.row][this.col + direction] != 0) {
+      if (gridState[this.row][this.col + direction] != 0 && gridState[this.row][this.col + direction].accel == 0) {
         if (gridState[this.row - 1][this.col + direction] == 0) {
-          this.state = STATE.CLIMBING;
           this.targetClimbingRow = this.row - 1;
           this.targetClimbingCol = this.col + direction;
+
+          this.state = STATE.CLIMBING;
+          this.sprite.play('jump');
+          this.sprite.y -= 84 * this.spriteScale;
+          this.sprite.x += 36 * ((this.direction) ? 1 : -1.7) * this.spriteScale;
 
         } else {
           // Can't climb, invert direction
@@ -90,14 +106,10 @@ module.exports = class GoodGuy {
       }
 
     } else if (this.state == STATE.CLIMBING) {
-
-      // play climbing animation
-      setTimeout(function() {
-        this.state = STATE.WALKING;
-        this.sprite.y = this.targetClimbingRow * GRID_SIZE_PX - 2;
-        this.sprite.x = this.targetClimbingCol * GRID_SIZE_PX;
-      }.bind(this), 100)
-
+      // 136x170
+      // 100x100
+      // this.sprite.x += 36 * this.spriteScale;
+      // this.sprite.y = this.targetClimbingRow * GRID_SIZE_PX;
     }
 
   }
