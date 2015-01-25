@@ -9,10 +9,13 @@ module.exports = class Game {
 
   constructor() {
     this.gridState = new Array(GRID_WIDTH);
+    this.theirGridState = new Array(GRID_WIDTH);
 
     this.allBoxes = [];
+    this.allTheirBoxes = [];
     window.allBoxes = this.allBoxes;
     this.allEntities = [];
+    this.allTheirEntities = [];
     this.graphics = null;
 
     this.blockCreator = new BlockCreator(this);
@@ -117,8 +120,10 @@ module.exports = class Game {
     // Clean up grid with zeros
     for (var i = GRID_WIDTH - 1; i >= 0; i--) {
       this.gridState[i] = new Array(GRID_HEIGHT);
+      this.theirGridState[i] = new Array(GRID_HEIGHT);
       for (var j = GRID_HEIGHT - 1; j >= 0; j--) {
         this.gridState[i][j] = 0;
+        this.theirGridState[i][j] = 0;
       }
     }
 
@@ -144,152 +149,148 @@ module.exports = class Game {
     setTimeout(function(){
       that.ourObjects = that.ourObjects || that.add.group();
       that.ourObjects.z = 1;
-      //for (var i in that.teams) {
-      //  for (var j = 0; j < that.teams[i].length; j++) {
+      for (var i in that.teams) {
+        for (var j = 0; j < that.teams[i].length; j++) {
           var ldata = _.clone(data);
-          //ldata.team = i;
-       var sprite = that.ourObjects.create(0, 0, 'good_guy');
+          ldata.team = i;
+          ldata.group = ldata.team != that.myTeam ? that.theirObjects : that.ourObjects;
+          ldata.array = ldata.team != that.myTeam ? that.allTheirEntities : that.allEntities;
+          var sprite = ldata.group.create(0, 0, 'good_guy');
 
-      sprite.animations.add('walk', [
-        'walk_cycle_00000.png',
-        'walk_cycle_00001.png',
-        'walk_cycle_00002.png',
-        'walk_cycle_00003.png',
-        'walk_cycle_00004.png',
-        'walk_cycle_00005.png',
-        'walk_cycle_00006.png',
-        'walk_cycle_00007.png',
-        'walk_cycle_00008.png',
-        'walk_cycle_00009.png',
-        'walk_cycle_00010.png',
-        'walk_cycle_00011.png',
-        'walk_cycle_00012.png',
-        'walk_cycle_00013.png',
-        'walk_cycle_00014.png',
-        'walk_cycle_00015.png',
-        'walk_cycle_00016.png',
-        'walk_cycle_00017.png',
-        'walk_cycle_00018.png',
-        'walk_cycle_00019.png',
-      ], 24, true, false);
+          sprite.animations.add('walk', [
+            'walk_cycle_00000.png',
+            'walk_cycle_00001.png',
+            'walk_cycle_00002.png',
+            'walk_cycle_00003.png',
+            'walk_cycle_00004.png',
+            'walk_cycle_00005.png',
+            'walk_cycle_00006.png',
+            'walk_cycle_00007.png',
+            'walk_cycle_00008.png',
+            'walk_cycle_00009.png',
+            'walk_cycle_00010.png',
+            'walk_cycle_00011.png',
+            'walk_cycle_00012.png',
+            'walk_cycle_00013.png',
+            'walk_cycle_00014.png',
+            'walk_cycle_00015.png',
+            'walk_cycle_00016.png',
+            'walk_cycle_00017.png',
+            'walk_cycle_00018.png',
+            'walk_cycle_00019.png',
+          ], 24, true, false);
 
-      sprite.animations.add('jump', [
-        'jump_UP_01_00000.png',
-        'jump_UP_01_00001.png',
-        'jump_UP_01_00002.png',
-        'jump_UP_01_00003.png',
-        'jump_UP_01_00004.png',
-        'jump_UP_01_00005.png',
-        'jump_UP_01_00006.png',
-        'jump_UP_01_00007.png',
-        'jump_UP_01_00008.png',
-        'jump_UP_01_00009.png',
-        'jump_UP_01_00010.png',
-        'jump_UP_01_00011.png',
-        'jump_UP_01_00012.png',
-        'jump_UP_01_00013.png',
-        'jump_UP_01_00014.png',
-        'jump_UP_01_00015.png',
-        'jump_UP_01_00016.png',
-        'jump_UP_01_00017.png',
-        'jump_UP_01_00018.png',
-        'jump_UP_01_00019.png',
-        'jump_UP_01_00020.png',
-        'jump_UP_01_00021.png',
-        'jump_UP_01_00022.png',
-        'jump_UP_01_00023.png',
-        'jump_UP_01_00024.png',
-        'jump_UP_01_00025.png',
-        'jump_UP_01_00026.png',
-        'jump_UP_01_00027.png',
-        'jump_UP_01_00028.png',
-        'jump_UP_01_00029.png',
-        'jump_UP_01_00030.png',
-        'jump_UP_01_00031.png',
-        'jump_UP_01_00032.png',
-        'jump_UP_01_00033.png',
-        'jump_UP_01_00034.png',
-        'jump_UP_01_00035.png',
-        'jump_UP_01_00036.png',
-        'jump_UP_01_00037.png',
-        'jump_UP_01_00038.png',
-        'jump_UP_01_00039.png',
-        'jump_UP_01_00040.png',
-        'jump_UP_01_00041.png',
-        'jump_UP_01_00042.png',
-        'jump_UP_01_00043.png',
-        'jump_UP_01_00044.png',
-        'jump_UP_01_00045.png',
-        'jump_UP_01_00046.png',
-        'jump_UP_01_00047.png',
-      ], 24, false, false);
+          sprite.animations.add('jump', [
+            'jump_UP_01_00000.png',
+            'jump_UP_01_00001.png',
+            'jump_UP_01_00002.png',
+            'jump_UP_01_00003.png',
+            'jump_UP_01_00004.png',
+            'jump_UP_01_00005.png',
+            'jump_UP_01_00006.png',
+            'jump_UP_01_00007.png',
+            'jump_UP_01_00008.png',
+            'jump_UP_01_00009.png',
+            'jump_UP_01_00010.png',
+            'jump_UP_01_00011.png',
+            'jump_UP_01_00012.png',
+            'jump_UP_01_00013.png',
+            'jump_UP_01_00014.png',
+            'jump_UP_01_00015.png',
+            'jump_UP_01_00016.png',
+            'jump_UP_01_00017.png',
+            'jump_UP_01_00018.png',
+            'jump_UP_01_00019.png',
+            'jump_UP_01_00020.png',
+            'jump_UP_01_00021.png',
+            'jump_UP_01_00022.png',
+            'jump_UP_01_00023.png',
+            'jump_UP_01_00024.png',
+            'jump_UP_01_00025.png',
+            'jump_UP_01_00026.png',
+            'jump_UP_01_00027.png',
+            'jump_UP_01_00028.png',
+            'jump_UP_01_00029.png',
+            'jump_UP_01_00030.png',
+            'jump_UP_01_00031.png',
+            'jump_UP_01_00032.png',
+            'jump_UP_01_00033.png',
+            'jump_UP_01_00034.png',
+            'jump_UP_01_00035.png',
+            'jump_UP_01_00036.png',
+            'jump_UP_01_00037.png',
+            'jump_UP_01_00038.png',
+            'jump_UP_01_00039.png',
+            'jump_UP_01_00040.png',
+            'jump_UP_01_00041.png',
+            'jump_UP_01_00042.png',
+            'jump_UP_01_00043.png',
+            'jump_UP_01_00044.png',
+            'jump_UP_01_00045.png',
+            'jump_UP_01_00046.png',
+            'jump_UP_01_00047.png',
+          ], 24, false, false);
 
-      sprite.animations.add('jump_down', [
-        'jump_DOWN_02_00000.png',
-        'jump_DOWN_02_00001.png',
-        'jump_DOWN_02_00002.png',
-        'jump_DOWN_02_00003.png',
-        'jump_DOWN_02_00004.png',
-        'jump_DOWN_02_00005.png',
-        'jump_DOWN_02_00006.png',
-        'jump_DOWN_02_00007.png',
-        'jump_DOWN_02_00008.png',
-        'jump_DOWN_02_00009.png',
-        'jump_DOWN_02_00010.png',
-        'jump_DOWN_02_00011.png',
-        'jump_DOWN_02_00012.png',
-        'jump_DOWN_02_00013.png',
-        'jump_DOWN_02_00014.png',
-        'jump_DOWN_02_00015.png',
-        'jump_DOWN_02_00016.png',
-        'jump_DOWN_02_00017.png',
-        'jump_DOWN_02_00018.png',
-        'jump_DOWN_02_00019.png',
-        'jump_DOWN_02_00020.png',
-        'jump_DOWN_02_00021.png',
-        'jump_DOWN_02_00022.png',
-        'jump_DOWN_02_00023.png',
-        'jump_DOWN_02_00024.png',
-        'jump_DOWN_02_00025.png',
-        'jump_DOWN_02_00026.png',
-        'jump_DOWN_02_00027.png',
-        'jump_DOWN_02_00028.png',
-        'jump_DOWN_02_00029.png',
-        'jump_DOWN_02_00030.png',
-        'jump_DOWN_02_00031.png',
-        'jump_DOWN_02_00032.png',
-        'jump_DOWN_02_00033.png',
-        'jump_DOWN_02_00034.png',
-        'jump_DOWN_02_00035.png',
-        'jump_DOWN_02_00036.png',
-        'jump_DOWN_02_00037.png',
-        'jump_DOWN_02_00038.png',
-        'jump_DOWN_02_00039.png',
-        'jump_DOWN_02_00040.png',
-        'jump_DOWN_02_00041.png',
-        'jump_DOWN_02_00042.png',
-        'jump_DOWN_02_00043.png',
-        'jump_DOWN_02_00044.png',
-        'jump_DOWN_02_00045.png',
-        'jump_DOWN_02_00046.png',
-        'jump_DOWN_02_00047.png',
-      ], 24, false, false);
+          sprite.animations.add('jump_down', [
+            'jump_DOWN_02_00000.png',
+            'jump_DOWN_02_00001.png',
+            'jump_DOWN_02_00002.png',
+            'jump_DOWN_02_00003.png',
+            'jump_DOWN_02_00004.png',
+            'jump_DOWN_02_00005.png',
+            'jump_DOWN_02_00006.png',
+            'jump_DOWN_02_00007.png',
+            'jump_DOWN_02_00008.png',
+            'jump_DOWN_02_00009.png',
+            'jump_DOWN_02_00010.png',
+            'jump_DOWN_02_00011.png',
+            'jump_DOWN_02_00012.png',
+            'jump_DOWN_02_00013.png',
+            'jump_DOWN_02_00014.png',
+            'jump_DOWN_02_00015.png',
+            'jump_DOWN_02_00016.png',
+            'jump_DOWN_02_00017.png',
+            'jump_DOWN_02_00018.png',
+            'jump_DOWN_02_00019.png',
+            'jump_DOWN_02_00020.png',
+            'jump_DOWN_02_00021.png',
+            'jump_DOWN_02_00022.png',
+            'jump_DOWN_02_00023.png',
+            'jump_DOWN_02_00024.png',
+            'jump_DOWN_02_00025.png',
+            'jump_DOWN_02_00026.png',
+            'jump_DOWN_02_00027.png',
+            'jump_DOWN_02_00028.png',
+            'jump_DOWN_02_00029.png',
+            'jump_DOWN_02_00030.png',
+            'jump_DOWN_02_00031.png',
+            'jump_DOWN_02_00032.png',
+            'jump_DOWN_02_00033.png',
+            'jump_DOWN_02_00034.png',
+            'jump_DOWN_02_00035.png',
+            'jump_DOWN_02_00036.png',
+            'jump_DOWN_02_00037.png',
+            'jump_DOWN_02_00038.png',
+            'jump_DOWN_02_00039.png',
+            'jump_DOWN_02_00040.png',
+            'jump_DOWN_02_00041.png',
+            'jump_DOWN_02_00042.png',
+            'jump_DOWN_02_00043.png',
+            'jump_DOWN_02_00044.png',
+            'jump_DOWN_02_00045.png',
+            'jump_DOWN_02_00046.png',
+            'jump_DOWN_02_00047.png',
+          ], 24, false, false);
 
-      sprite.animations.add('falling', ['jump_DOWN_02_00030.png'], 24, true, false);
+          sprite.animations.add('falling', ['jump_DOWN_02_00030.png'], 24, true, false);
 
-      sprite.animations.play('walk');
-        /*if(ldata.team != that.myTeam) {
-            sprite.scale.y *= -1;
-            sprite.anchor.setTo(0,1);
-            //data.x = game.width - 11;
-            ldata.y = game.height - 10;
-          }*/
-      var guy = new GoodGuy(sprite, data);
+          sprite.animations.play('walk');
+          var guy = new GoodGuy(sprite, data);
 
-      that.allEntities.push(guy);
-      console.log("createGoodGuy", data);
-        //}
-      //}
+          that.allEntities.push(guy);
+          console.log("createGoodGuy", data);
+        }
+      }
     }, 150);
 
   }
@@ -314,54 +315,13 @@ module.exports = class Game {
       this.allEntities[i].update(this.gridState);
     }
 
-    for (var i = this.allBoxes.length - 1; i >= 0; i--) {
-      this.allBoxes[i].accel += GRAVITY;
-      this.allBoxes[i].y += this.time.physicsElapsed * this.allBoxes[i].accel * GRAVITY;
-
-      if(this.allBoxes[i].y + GRID_SIZE_PX >= this.height) {
-        this.allBoxes[i].y = this.height - GRID_SIZE_PX;
-        this.allBoxes[i].accel = 0;
-
-        if(this.allBoxes[i].antiblock) {
-          this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
-          continue;
-        }
-      }
-
-      var nextRow = Math.ceil(this.allBoxes[i].y / GRID_SIZE_PX),
-          curRow = Math.floor(this.allBoxes[i].y / GRID_SIZE_PX);
-
-      if(nextRow != this.allBoxes[i].row) {
-        var targetRow = this.gridState[nextRow] || this.gridState[curRow];
-        if(targetRow[this.allBoxes[i].col] == 0) {
-          this.gridState[this.allBoxes[i].row][this.allBoxes[i].col] = 0;
-          this.gridState[nextRow][this.allBoxes[i].col] = this.allBoxes[i];
-          this.allBoxes[i].row = nextRow;
-        }
-        else {
-          if(this.allBoxes[i].antiblock) {
-            this.blockDestroyer.addToRemoveList(targetRow[this.allBoxes[i].col]);
-            this.blockDestroyer.addToRemoveList(this.allBoxes[i]);
-          }
-          else {
-
-            // play sound when it hits the ground.
-            this.allBoxes[i].y = this.allBoxes[i].row * GRID_SIZE_PX;
-            if (this.allBoxes[i].audio && this.allBoxes[i].accel > GRAVITY) {
-              this.allBoxes[i].audio.play();
-            }
-            this.allBoxes[i].accel = 0;
-
-            // // animate bounce
-            // game.add.tween(this.allBoxes[i]).from( {
-            //   y: "-10",
-            //   alpha: 0
-            // }, 1000, Phaser.Easing.Bounce.Out, true);
-
-          }
-        }
-      }
+    for (var i = this.allTheirEntities.length - 1; i >= 0; i--) {
+      this.allTheirEntities[i].update(this.theirGridState);
     }
+
+    this.updateBoxes(this.allBoxes, this.gridState);
+    this.updateBoxes(this.allTheirBoxes, this.theirGridState);
+
     this.blockDestroyer.removeBlocks();
   }
 
@@ -371,6 +331,57 @@ module.exports = class Game {
        line.push(this.toolLine[i].MESSAGE);
     }
     game.debug.text("Tools:" + line.toString(), 0, 55, 'rgb(255,255,0)');
+  }
+
+  updateBoxes(boxArray, grid) {
+    for (var i = boxArray.length - 1; i >= 0; i--) {
+      boxArray[i].accel += GRAVITY;
+      boxArray[i].y += this.time.physicsElapsed * boxArray[i].accel * GRAVITY;
+
+      if(boxArray[i].y + GRID_SIZE_PX >= this.height) {
+        boxArray[i].y = this.height - GRID_SIZE_PX;
+        boxArray[i].accel = 0;
+
+        if(boxArray[i].antiblock) {
+          this.blockDestroyer.addToRemoveList(boxArray[i]);
+          continue;
+        }
+      }
+
+      var nextRow = Math.ceil(boxArray[i].y / GRID_SIZE_PX),
+          curRow = Math.floor(boxArray[i].y / GRID_SIZE_PX);
+
+      if(nextRow != boxArray[i].row) {
+        var targetRow = this.gridState[nextRow] || this.gridState[curRow];
+        if(targetRow[boxArray[i].col] == 0) {
+          this.gridState[boxArray[i].row][boxArray[i].col] = 0;
+          grid[nextRow][boxArray[i].col] = boxArray[i];
+          boxArray[i].row = nextRow;
+        }
+        else {
+          if(boxArray[i].antiblock) {
+            this.blockDestroyer.addToRemoveList(targetRow[boxArray[i].col]);
+            this.blockDestroyer.addToRemoveList(boxArray[i]);
+          }
+          else {
+
+            // play sound when it hits the ground.
+            boxArray[i].y = boxArray[i].row * GRID_SIZE_PX;
+            if (boxArray[i].audio && boxArray[i].accel > GRAVITY) {
+              boxArray[i].audio.play();
+            }
+            boxArray[i].accel = 0;
+
+            // // animate bounce
+            // game.add.tween(boxArray[i]).from( {
+            //   y: "-10",
+            //   alpha: 0
+            // }, 1000, Phaser.Easing.Bounce.Out, true);
+
+          }
+        }
+      }
+    }
   }
 
 }

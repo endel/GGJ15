@@ -33,9 +33,11 @@ class BlockCreator {
       var row = _game.myTeam != data.team ? GRID_HEIGHT - data.row - 1 : data.row;
       var posx = col * GRID_SIZE_PX;
       var posy = row * GRID_SIZE_PX;
-
+      var group = _game.myTeam != data.team ? _game.theirObjects : _game.ourObjects;
+      var objArray = _game.myTeam != data.team ? _game.allTheirBoxes : _game.allBoxes;
+      var grid = _game.myTeam != data.team ? _game.theirGridState : _game.gridState;
       var spriteId = Math.floor(Math.random()*this.block_sprites.length);
-      var box = ourObjects.create(posx, posy, this.block_sprites[spriteId]); //_game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
+      var box = group.create(posx, posy, this.block_sprites[spriteId]); //_game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
       //_game.objects.add(box);
 
       // play respective audio
@@ -43,7 +45,7 @@ class BlockCreator {
 
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;
-      _game.gridState[row][col] = box;
+      grid[row][col] = box;
       box.accel = 0;
       box.col = col;
       box.row = row;
@@ -51,7 +53,7 @@ class BlockCreator {
       box.isBlock = true;
       box.team = data.team;
       ///////// TODO: Criar uma lista separada para blocos do time adversário
-      _game.allBoxes.push(box);
+      objArray.push(box);
 
       game.add.tween(box).from( {
         angle: -20,
