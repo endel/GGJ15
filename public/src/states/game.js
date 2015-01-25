@@ -11,6 +11,8 @@ module.exports = class Game {
     this.gridState = new Array(GRID_WIDTH);
     this.theirGridState = new Array(GRID_WIDTH);
 
+    this.cursorOffset = new Phaser.Point(17, 13);
+
     this.allBoxes = [];
     this.allTheirBoxes = [];
     window.allBoxes = this.allBoxes;
@@ -55,6 +57,11 @@ module.exports = class Game {
             });
             that.toolLine.shift();
             that.refillToolLine();
+          }
+          else {
+            that.cursorDenied = that.foregroud.create(that.input.x, that.input.y, 'cursor-denied');
+            that.cursorDenied.lifespan = 500;
+            that.cursorDenied.anchor.set(0.5, 0.5);
           }
         }, that);
         that.myTeam = -1;
@@ -107,15 +114,19 @@ module.exports = class Game {
     window.groupObjects = this.ourObjects;
 
     //*** Back and foreground ***
-    this.sky = this.backgroud.create(0, 0, 'sky');
-    this.sky.width = game.width;
-    this.sky.height = game.height;
+    this.create_sky();
     this.wires = this.foregroud.create(0, 0, 'wires');
     this.wires.width = game.width;
     this.wires.height = game.height;
     this.grid = this.foregroud.create(0, 0, 'grid');
     this.grid.width = game.width;
     this.grid.height = game.height;
+
+    //this.cursorAdd = this.foregroud.create(0, 0, 'cursor-add');
+    //this.cursorSub = this.foregroud.create(0, 0, 'cursor-sub');
+    this.cursorAdd = this.add.sprite(0, 0, 'cursor-add');
+    this.cursorSub = this.add.sprite(0, 0, 'cursor-sub');
+    //this.cursorSub.visible = this.cursorAdd.visible = false;
 
     // Clean up grid with zeros
     for (var i = GRID_WIDTH - 1; i >= 0; i--) {
@@ -351,7 +362,18 @@ module.exports = class Game {
     this.updateBoxes(this.allBoxes, this.gridState);
     this.updateBoxes(this.allTheirBoxes, this.theirGridState);
 
-    this.blockDestroyer.removeBlocks();
+    if(this.toolLine.length > 0) {
+      this.cursorSub.visible = this.cursorAdd.visible = false;
+      var tool = this.toolLine[0];
+      if(tool == this.blockCreator) {
+        this.cursorAdd.visible = true;
+        Phaser.Point.add(this.input.position, this.cursorOffset, this.cursorAdd.position);
+      }
+      else {
+        this.cursorSub.visible = true;
+        Phaser.Point.add(this.input.position, this.cursorOffset, this.cursorSub.position);
+      }
+    }
   }
 
   render() {
@@ -359,7 +381,7 @@ module.exports = class Game {
     for (var i = 0; i < this.toolLine.length; i++) {
        line.push(this.toolLine[i].MESSAGE);
     }
-    game.debug.text("Tools:" + line.toString(), 0, 55, 'rgb(255,255,0)');
+    //game.debug.text("Tools:" + line.toString(), 0, 55, 'rgb(255,255,0)');
   }
 
   updateBoxes(boxArray, grid) {
@@ -397,7 +419,7 @@ module.exports = class Game {
 
             // play sound when it hits the ground.
             boxArray[i].y = boxArray[i].row * GRID_SIZE_PX;
-            if (boxArray[i].audio && boxArray[i].accel > GRAVITY) {
+            if (boxArray[i].audio && boxArray[i].accel > GRAVITY * 2) {
               boxArray[i].audio.play();
             }
             boxArray[i].accel = 0;
@@ -412,6 +434,20 @@ module.exports = class Game {
         }
       }
     }
+  }
+
+  create_sky() {
+    this.sky = this.backgroud.create(0, 0, 'sky0');
+    this.sky.width = game.width;
+    this.sky.height = game.height;
+    var count = 0;
+    var that = this;
+    setInterval(function () {
+      that.sky.loadTexture(window.sky_names[count++]);
+      count = count % 50;
+    }, 40);
+    //this.sky.animations.add('loop', window.sky_names, 24, false, false);
+    //this.sky.animations.play('loop');
   }
 
 }
