@@ -35,10 +35,11 @@ class BlockCreator {
       var posy = row * GRID_SIZE_PX;
 
       var spriteId = Math.floor(Math.random()*this.block_sprites.length);
-      var box = _game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
+      var box = ourObjects.create(posx, posy, this.block_sprites[spriteId]); //_game.add.sprite(posx, posy, this.block_sprites[spriteId], _game.objects);
+      //_game.objects.add(box);
 
-      box.audio = Sound.get("block-" + this.block_sprites[spriteId]) || Sound.get("block-undefined");
-      Sound.get("block").play();
+      // play respective audio
+      Sound.get("block-" + this.block_sprites[spriteId]).play();
 
       box.width = GRID_SIZE_PX;
       box.height = GRID_SIZE_PX;

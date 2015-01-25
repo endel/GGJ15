@@ -88,21 +88,29 @@ module.exports = class Game {
     var that = this;
     this.connect();
 
-    this.backgroud = this.add.group();
+    this.backgroud = game.add.group();
     this.backgroud.z = 0;
-    this.objects = this.objects || this.add.group();
-    this.objects.z = 1;
-    this.foregroud = this.add.group();
-    this.foregroud.z = 2;
+    this.ourObjects = this.ourObjects || game.add.group();
+    this.ourObjects.z = 1;
+    this.theirObjects = this.theirObjects || game.add.group();
+    this.theirObjects.x = this.theirObjects.width = game.width;
+    this.theirObjects.y = this.theirObjects.height = game.height;
+    this.theirObjects.pivot.set(0,0);
+    this.theirObjects.scale.set(-1,-1);
+    this.theirObjects.z = 2;
+    this.foregroud = game.add.group();
+    this.foregroud.z = 3;
+
+    window.groupObjects = this.ourObjects;
 
     //*** Back and foreground ***
-    this.sky = this.add.sprite(0, 0, 'sky', this.backgroud);
+    this.sky = this.backgroud.create(0, 0, 'sky');
     this.sky.width = game.width;
     this.sky.height = game.height;
-    this.wires = this.add.sprite(0, 0, 'wires', this.foregroud);
+    this.wires = this.foregroud.create(0, 0, 'wires');
     this.wires.width = game.width;
     this.wires.height = game.height;
-    this.grid = this.add.sprite(0, 0, 'grid', this.foregroud);
+    this.grid = this.foregroud.create(0, 0, 'grid');
     this.grid.width = game.width;
     this.grid.height = game.height;
 
@@ -118,7 +126,7 @@ module.exports = class Game {
 
     this.refillToolLine();
 
-    that.createGoodGuy({x: 11, y: 10});
+    //that.createGoodGuy({x: 11, y: 10});
 
     /*this.graphics.lineStyle(2, 0xFFFFFF);
     for (var i = 0; i <= GRID_WIDTH; i++) {
@@ -134,13 +142,13 @@ module.exports = class Game {
   createGoodGuy(data) {
     var that = this;
     setTimeout(function(){
-      that.objects = that.objects || that.add.group();
-      that.objects.z = 1;
-        for (var i in that.teams) {
-        for (var j = 0; j < that.teams[i].length; j++) {
+      that.ourObjects = that.ourObjects || that.add.group();
+      that.ourObjects.z = 1;
+      //for (var i in that.teams) {
+      //  for (var j = 0; j < that.teams[i].length; j++) {
           var ldata = _.clone(data);
-          ldata.team = i;
-       var sprite = that.add.sprite(0, 0, 'good_guy', that.objects);
+          //ldata.team = i;
+       var sprite = that.ourObjects.create(0, 0, 'good_guy');
 
       sprite.animations.add('walk', [
         'walk_cycle_00000.png',
@@ -270,18 +278,18 @@ module.exports = class Game {
       sprite.animations.add('falling', ['jump_DOWN_02_00030.png'], 24, true, false);
 
       sprite.animations.play('walk');
-        if(ldata.team != that.myTeam) {
+        /*if(ldata.team != that.myTeam) {
             sprite.scale.y *= -1;
             sprite.anchor.setTo(0,1);
             //data.x = game.width - 11;
             ldata.y = game.height - 10;
-          }
+          }*/
       var guy = new GoodGuy(sprite, data);
 
       that.allEntities.push(guy);
       console.log("createGoodGuy", data);
-        }
-      }
+        //}
+      //}
     }, 150);
 
   }
