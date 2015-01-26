@@ -6,7 +6,7 @@ var STATE = {
   TURNING: 4,
 }
 
-var musicLevel = 0, levelToGetTense = 4;
+var musicLevel = 0, levelToGetTense = 3;
 
 module.exports = class GoodGuy {
 
